@@ -1,14 +1,15 @@
-class Player extends THREE.Mesh {
+class Player extends Movable {
 	constructor() {
 		super();
 
 		this.geometry = new THREE.BoxGeometry (1,1,1);
 		this.material = new THREE.MeshPhongMaterial({color: 0xff0000});
+		this.active_weapon = new ProjectleGenerator(this);
+		this.thrust = Array(4).fill(false);
 
 		this.MAXSPEED = 20; //Velocidades en distancia/segundo
 		this.MAXACCEL = 0.5;
 		this.FRICTION = 0.1;
-		this.thrust = Array(4).fill(false);
 		this.posX = 0.0;
 		this.posZ = 0.0;
 		this.speedX = 0;
@@ -36,7 +37,6 @@ class Player extends THREE.Mesh {
 		}
 	}
 	onKeyUp(event) {
-		console.log("AAAAA");
 		if(event.key == 'S' || event.key == 's') {
 			this.thrust[Player.KEYPRESS_DOWN] = false;
 		}
@@ -50,16 +50,15 @@ class Player extends THREE.Mesh {
 			this.thrust[Player.KEYPRESS_RIGHT] = false;
 		}
 	}
+	onMouseDown(event) {
+		this.active_weapon.onMouseDown(event);
+	}
 
-	update (camera, ground) {
-		var raycaster = new  THREE.Raycaster();
-		raycaster.setFromCamera (mouse, camera);
-		var pickedObjects = raycaster.intersectObject(ground, false);
-		if(pickedObjects.length > 0) {
-			this.lookAt(pickedObjects[0].point);
-		}
+	update () {
+
 		this.updateMove();
 		this.position.set(this.posX, 0, this.posZ);
+		this.lookAt(mouse3D);
 	}
 
 
