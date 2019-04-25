@@ -68,6 +68,10 @@ function onMouseDown(event) {
     scene.onMouseDown(event);
 }
 
+function onMouseUp(event) {
+    scene.onMouseUp(event);
+}
+
 //Devuelve un numero acotado entre un minimo y un maximo
 function clamp(min, num, max) {
     return Math.max(min, Math.min(num, max));
@@ -88,6 +92,8 @@ $(function () {
   window.addEventListener ("keypress", onKeyPress)
   window.addEventListener ("keyup", onKeyUp)
   window.addEventListener ("mousedown", onMouseDown)
+  window.addEventListener ("mouseup", onMouseUp)
+
 
   // Se crea una interfaz gráfica de usuario vacia
   //gui = new dat.GUI();

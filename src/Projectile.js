@@ -8,10 +8,23 @@ class ProjectleGenerator {
         this.parent_object = parent;
         this.projectile_speed = 40;
         this.color = color_goldenrod;
+        this.firing = false;
     }
 
     onMouseDown(event) {
-        if(event.button == 0 && this.last_shot + this.cooldown < gameTime ) {
+        if(event.button == 0) {
+            this.firing = true;
+        }
+    }
+
+    onMouseUp(event) {
+        if(event.button == 0) {
+            this.firing = false;
+        }
+    }
+
+    update() {
+        if(this.firing && this.last_shot + this.cooldown < gameTime ) {
             this.generate();
             this.last_shot = gameTime;
         }

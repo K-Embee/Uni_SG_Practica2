@@ -53,9 +53,12 @@ class Player extends Movable {
 	onMouseDown(event) {
 		this.active_weapon.onMouseDown(event);
 	}
+	onMouseUp(event) {
+		this.active_weapon.onMouseUp(event);
+	}
 
 	update () {
-
+		this.active_weapon.update();
 		this.updateMove();
 		this.position.set(this.posX, 0, this.posZ);
 		this.lookAt(mouse3D);

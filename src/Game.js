@@ -80,6 +80,9 @@ class Game extends THREE.Scene {
 	onMouseDown(event) {
 		this.model.onMouseDown(event);
 	}
+	onMouseUp(event) {
+		this.model.onMouseUp(event);
+	}
 
 	update () {
 		gameTime_prev = gameTime;
