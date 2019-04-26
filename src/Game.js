@@ -4,6 +4,32 @@ var gameTime_prev = null;
 var mouse = null;
 var mouse3D = null;
 
+var color_gold = 0xffd700
+var color_goldenrod = 0xdaa520;
+var color_brown = 0x654321;
+var color_darkpurple = 0x800080;
+var color_pink = 0xff00ff;
+
+//Devuelve la diff de tiempo entre este frame y el anterior
+function timeSinceLastFrame(){
+	return (gameTime-gameTime_prev)/1000.0;
+}
+
+//Devuelve un numero acotado entre un minimo y un maximo
+function clamp(min, num, max) {
+    return Math.max(min, Math.min(num, max));
+}
+
+//Pasa un angulo de grados a radianes
+function toRadians(angle){
+    return angle*Math.PI/180;
+}
+
+//Pasa un anglulo de radianesa grados
+function toDegrees(angle){
+	return angle*180/Math.PI;
+}
+
 class Game extends THREE.Scene {
 	constructor (unRenderer) {
 		super();
@@ -12,6 +38,7 @@ class Game extends THREE.Scene {
 		this.createCamera (unRenderer);
 		this.createGround ();
 		this.projectiles = Array();
+		this.hitboxes = Array();
 
 		this.axis = new THREE.AxesHelper (5);
 		this.add (this.axis);
@@ -34,7 +61,7 @@ class Game extends THREE.Scene {
 
 	createGround () {
 		var ground = new THREE.Mesh ();
-		ground.geometry = new THREE.BoxGeometry (50,0.2,50);
+		ground.geometry = new THREE.BoxGeometry (100,0.2,50);
 		ground.geometry.applyMatrix (new THREE.Matrix4().makeTranslation(0,-0.1,0));
 		var texture = new THREE.TextureLoader().load('media/wood.jpg');
 		ground.material = new THREE.MeshPhongMaterial ({map: texture, opacity: 0.4, transparent: true});

@@ -1,5 +1,11 @@
 class Hitbox extends THREE.SphereGeometry {
-    constructor(radio){
-        super(radio, 5, 5);
+    constructor(radio, parent_object) {
+        super(radio, 4, 4);
+        parent_object.add(this);
+        this.parent_object = parent_object;
+        scene.hitboxes.add(this);
+    }
+    onCollision() {
+
     }
 }

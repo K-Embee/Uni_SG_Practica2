@@ -1,7 +1,5 @@
-var color_gold = 0xffd700
-var color_goldenrod = 0xdaa520;
 
-class ProjectleGenerator {
+class ProjectileGenerator {
     constructor(parent){
         this.cooldown = 500;
         this.last_shot = gameTime;
@@ -9,6 +7,7 @@ class ProjectleGenerator {
         this.projectile_speed = 40;
         this.color = color_goldenrod;
         this.firing = false;
+        this.damage = 30
     }
 
     onMouseDown(event) {
@@ -31,21 +30,68 @@ class ProjectleGenerator {
     }
 
     generate() {
-        var worldpos = new THREE.Vector3();
         new Projectile(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
     }
 }
 
-class Projectile extends THREE.Mesh {
-    constructor(origin, destination, speed, color) {
+class ProjectileGenerator_SPREAD extends ProjectileGenerator {
+    constructor(parent){
+        super(parent);
+        this.cooldown = 750;
+        this.projectile_speed = 40;
+        this.pellets = 5
+        this.spread_angle = 45;
+    }
+
+    generate() {
+        for(var i = 0; i < this.pellets; i++){
+            var angle = this.spread_angle*(i/(this.pellets-1))-this.spread_angle/2.0;
+            new Projectile_SPREAD(this.parent_object.position,mouse3D,this.projectile_speed,this.color,angle);
+        }
+    }
+}
+
+class ProjectileGenerator_RAPIDFIRE extends ProjectileGenerator {
+    constructor(parent){
+        super(parent);
+        this.cooldown = 150;
+        this.projectile_speed = 70;
+        this.damage = this.damage/3
+    }
+
+    generate() {
+        new Projectile_RAPIDFIRE(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
+    }
+}
+
+class ProjectileGenerator_HOMING extends ProjectileGenerator {
+    constructor(parent){
+        super(parent);
+        this.color = color_darkpurple;
+        this.cooldown = 800;
+        this.projectile_speed = 20;
+        this.damage = this.damage*3
+    }
+
+    generate() {
+        new Projectile_HOMING(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
+    }
+}
+
+class Projectile extends Movable {
+    constructor(origin, destination, scalar_speed, color) {
         super();
         //this.light = new THREE.PointLight(color, 10, 1, 1);
         this.geometry = new THREE.SphereGeometry(0.5, 5, 5);
         this.material = new THREE.MeshLambertMaterial({ color: color, emissive: color });
         this.position.copy(origin);
-        this.vector = destination.sub(origin);
-        this.vector.normalize();
-        this.speed = speed;
+        this.posX = origin.x;
+        this.posZ = origin.z;
+        this.speed = new THREE.Vector2(destination.x,destination.z).sub(new THREE.Vector2(origin.x,origin.z));
+        this.speed.normalize().multiplyScalar(scalar_speed);
+
+        this.MAXSPEED = scalar_speed;
+        //this.hitbox = new Hitbox(0.5, this);
 
         //this.light.position.copy(this.position);
         //this.add(this.light);
@@ -54,17 +100,65 @@ class Projectile extends THREE.Mesh {
     }
 
     update() {
-        var x = this.position.x + (this.vector.x * this.speed * (gameTime-gameTime_prev)/1000);
-        var z = this.position.z + (this.vector.z * this.speed * (gameTime-gameTime_prev)/1000);
-        this.position.set(x,0,z);
+        super.update();
     }
 
     OOBCheck() {
         if(Math.abs(this.position.x) > 200 || Math.abs(this.position.z) > 200) {
-            this.geometry.dispose();
-            this.material.dispose();
+            this.dispose();
             return true;
         }
         return false;
+    }
+
+    dispose() {
+        this.geometry.dispose();
+        this.material.dispose();
+    }
+}
+
+class Projectile_SPREAD extends Projectile {
+    constructor(origin, destination, scalar_speed, color, spread_angle) {
+        super(origin, destination, scalar_speed, color);
+        var axis = new THREE.Vector3(0,1,0);
+        var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
+        console.log(speed3D);
+        speed3D.applyAxisAngle(axis, toRadians(spread_angle));
+        console.log(speed3D);
+        this.speed.set(speed3D.x,speed3D.z);
+    }
+}
+class Projectile_RAPIDFIRE extends Projectile {
+    constructor(origin, destination, scalar_speed, color, spread_angle) {
+        super(origin, destination, scalar_speed, color);
+        this.inaccuracy = 10;
+        var axis = new THREE.Vector3(0,1,0);
+        var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
+        speed3D.applyAxisAngle(axis, toRadians(Math.random()*this.inaccuracy-this.inaccuracy/2));
+        this.speed.set(speed3D.x,speed3D.z);
+    }
+}
+
+class Projectile_HOMING extends Projectile {
+    constructor(origin, destination, scalar_speed, color, spread_angle) {
+        super(origin, destination, scalar_speed, color);
+        this.spawn_time = gameTime;
+        this.MAXACCEL = 3;
+        this.CONSTANT_SPEED = true;
+    }
+
+    update() {
+        var axis = new THREE.Vector3(0,1,0);
+        var accel3D = mouse3D.sub(this.position).multiplyScalar(this.MAXACCEL);
+        this.accel.set(accel3D.x,accel3D.z);
+        super.update();
+    }
+
+    OOBCheck() {
+        if(gameTime > 5000 + this.spawn_time) {
+            this.dispose();
+            return true;
+        }
+        super.OOBCheck();
     }
 }

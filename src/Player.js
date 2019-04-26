@@ -4,35 +4,25 @@ class Player extends Movable {
 
 		this.geometry = new THREE.BoxGeometry (1,1,1);
 		this.material = new THREE.MeshPhongMaterial({color: 0xff0000});
-		this.active_weapon = new ProjectleGenerator(this);
+		this.active_weapon = new ProjectileGenerator_HOMING(this);
 		this.thrust = Array(4).fill(false);
 
 		this.MAXSPEED = 20; //Velocidades en distancia/segundo
-		this.MAXACCEL = 0.5;
-		this.FRICTION = 0.1;
-		this.posX = 0.0;
-		this.posZ = 0.0;
-		this.speedX = 0;
-		this.speedZ = 0;
-		this.accelX = 0;
-		this.accelZ = 0;
+		this.MAXACCEL = 30; //Aceleración en distancia/segundo^2
+		this.FRICTION = 300; //Velocidad que se resta por segundo mientras no se acelera
 	}
 
 	onKeyPress(event) {
 		if(event.key == 'S' || event.key == 's') {
-			this.accelZ = this.MAXACCEL;
 			this.thrust[Player.KEYPRESS_DOWN] = true;
 		}
 		else if(event.key == 'W' || event.key == 'w') {
-			this.accelZ = -this.MAXACCEL;
 			this.thrust[Player.KEYPRESS_UP] = true;
 		}
 		else if(event.key == 'A' || event.key == 'a') {
-			this.accelX = -this.MAXACCEL;
 			this.thrust[Player.KEYPRESS_LEFT] = true;
 		}
 		else if(event.key == 'D' || event.key == 'd') {
-			this.accelX = this.MAXACCEL;
 			this.thrust[Player.KEYPRESS_RIGHT] = true;
 		}
 	}
@@ -58,50 +48,26 @@ class Player extends Movable {
 	}
 
 	update () {
-		this.active_weapon.update();
-		this.updateMove();
-		this.position.set(this.posX, 0, this.posZ);
+		super.update();
 		this.lookAt(mouse3D);
+		this.active_weapon.update();
 	}
 
 
 	updateMove(){
 
-		//Prevenir el bug de la aceleración diagonal
-		/*var accelVector = new THREE.Vector2(this.accelX, this.accelZ);
-		if(accelVector.length() > this.MAXACCEL){
-			accelVector.normalize();
-			accelVector.multiplyScalar(this.MAXACCEL);
-		}
-		this.accelX = accelVector.x;
-		this.accelZ = accelVector.y;*/
+		this.accel = new THREE.Vector2(	(this.thrust[Player.KEYPRESS_LEFT])?-this.MAXACCEL:0 + (this.thrust[Player.KEYPRESS_RIGHT])?this.MAXACCEL:0,
+				(this.thrust[Player.KEYPRESS_UP])?-this.MAXACCEL:0 + (this.thrust[Player.KEYPRESS_DOWN])?this.MAXACCEL:0 );
 
-		//Si hay velocidad pero no se esta manteniendo una tecla pulsada...
-		if(!this.thrust[Player.KEYPRESS_LEFT] && !this.thrust[Player.KEYPRESS_RIGHT] && this.speedX != 0){
-			this.accelX = (this.speedX < 0) ? (this.FRICTION) : (-this.FRICTION);
+		var thrusting = false;
+		for(let i = 0; i < this.thrust.length; i++) {
+			if(this.thrust[i] == true) { thrusting = true; break; }
 		}
-		if(!this.thrust[Player.KEYPRESS_UP] && !this.thrust[Player.KEYPRESS_DOWN] && this.speedZ != 0){
-			this.accelZ = (this.speedZ < 0) ? (this.FRICTION) : (-this.FRICTION);
+		if(!thrusting && this.speed.x != 0 && this.speed.y != 0){
+			this.accel.copy(this.speed.clone().normalize().multiplyScalar(this.FRICTION*timeSinceLastFrame()).negate());
 		}
 
-		//Acelerar
-		this.speedX += this.accelX;
-		this.speedZ += this.accelZ;
-
-		this.speedX = clamp (-this.MAXSPEED, this.speedX, this.MAXSPEED);
-		this.speedZ = clamp (-this.MAXSPEED, this.speedZ, this.MAXSPEED);
-
-		//Prevenir el bug de la aceleración diagonal
-/*		var speedVector = new THREE.Vector2(this.speedX, this.speedZ);
-		if(speedVector.length() > this.MAXSPEED){
-			speedVector.normalize();
-			speedVector.multiplyScalar(this.MAXSPEED);
-		}
-		this.speedX = speedVector.x;
-		this.speedZ = speedVector.y;*/
-
-		this.posX += (this.speedX*(gameTime-gameTime_prev))/1000;
-		this.posZ += (this.speedZ*(gameTime-gameTime_prev))/1000;
+		super.updateMove();
 	}
 
 }

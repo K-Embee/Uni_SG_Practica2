@@ -72,11 +72,6 @@ function onMouseUp(event) {
     scene.onMouseUp(event);
 }
 
-//Devuelve un numero acotado entre un minimo y un maximo
-function clamp(min, num, max) {
-    return Math.max(min, Math.min(num, max));
-}
-
 /// La función principal
 $(function () {
   // Se crea el renderer
