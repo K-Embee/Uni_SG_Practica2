@@ -128,6 +128,7 @@ class Game extends THREE.Scene {
 		for(var i = 0; i < this.projectiles.length; i++) {
 			this.projectiles[i].update();
 			while(i < this.projectiles.length && this.projectiles[i].OOBCheck()){
+				this.remove(this.projectiles[i]);
 				this.projectiles.splice(i,1);
 			}
 		}
