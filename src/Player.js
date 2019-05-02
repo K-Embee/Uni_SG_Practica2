@@ -4,7 +4,13 @@ class Player extends Movable {
 
 		this.geometry = new THREE.BoxGeometry (1,1,1);
 		this.material = new THREE.MeshPhongMaterial({color: 0xff0000});
-		this.active_weapon = new ProjectileGenerator_HOMING(this);
+		this.weapons = [
+			new ProjectileGenerator(this),
+			new ProjectileGenerator_SPREAD(this),
+			new ProjectileGenerator_RAPIDFIRE(this),
+			new ProjectileGenerator_HOMING(this)
+		];
+		this.active_weapon = this.weapons[0];
 		this.thrust = Array(4).fill(false);
 
 		this.MAXSPEED = 20; //Velocidades en distancia/segundo
@@ -12,6 +18,20 @@ class Player extends Movable {
 		this.FRICTION = 300; //Velocidad que se resta por segundo mientras no se acelera
 	}
 
+	onKeyDown(event) {
+		if(event.key == 1) {
+			this.active_weapon = this.weapons[Player.KEYPRESS_1];
+		}
+		else if(event.key == 2) {
+			this.active_weapon = this.weapons[Player.KEYPRESS_2];
+		}
+		else if(event.key == 3) {
+			this.active_weapon = this.weapons[Player.KEYPRESS_3];
+		}
+		else if(event.key == 4) {
+			this.active_weapon = this.weapons[Player.KEYPRESS_4];
+		}
+	}
 	onKeyPress(event) {
 		if(event.key == 'S' || event.key == 's') {
 			this.thrust[Player.KEYPRESS_DOWN] = true;
@@ -72,7 +92,7 @@ class Player extends Movable {
 
 }
 
-Player.KEYPRESS_UP = 0;
-Player.KEYPRESS_DOWN = 1;
-Player.KEYPRESS_LEFT = 2;
-Player.KEYPRESS_RIGHT = 3;
+Player.KEYPRESS_UP		= Player.KEYPRESS_1	= 0;
+Player.KEYPRESS_DOWN	= Player.KEYPRESS_2 = 1;
+Player.KEYPRESS_LEFT	= Player.KEYPRESS_3 = 2;
+Player.KEYPRESS_RIGHT	= Player.KEYPRESS_4 = 3;

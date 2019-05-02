@@ -122,9 +122,7 @@ class Projectile_SPREAD extends Projectile {
         super(origin, destination, scalar_speed, color);
         var axis = new THREE.Vector3(0,1,0);
         var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
-        console.log(speed3D);
-        speed3D.applyAxisAngle(axis, toRadians(spread_angle));
-        console.log(speed3D);
+        speed3D.applyAxisAngle(axis, THREE.Math.degToRad(spread_angle));
         this.speed.set(speed3D.x,speed3D.z);
     }
 }
@@ -134,7 +132,7 @@ class Projectile_RAPIDFIRE extends Projectile {
         this.inaccuracy = 10;
         var axis = new THREE.Vector3(0,1,0);
         var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
-        speed3D.applyAxisAngle(axis, toRadians(Math.random()*this.inaccuracy-this.inaccuracy/2));
+        speed3D.applyAxisAngle(axis, THREE.Math.degToRad(Math.random()*this.inaccuracy-this.inaccuracy/2));
         this.speed.set(speed3D.x,speed3D.z);
     }
 }
@@ -143,14 +141,14 @@ class Projectile_HOMING extends Projectile {
     constructor(origin, destination, scalar_speed, color, spread_angle) {
         super(origin, destination, scalar_speed, color);
         this.spawn_time = gameTime;
-        this.MAXACCEL = 3;
+        this.MAXACCEL = 30;
         this.CONSTANT_SPEED = true;
     }
 
     update() {
-        var axis = new THREE.Vector3(0,1,0);
-        var accel3D = mouse3D.sub(this.position).multiplyScalar(this.MAXACCEL);
-        this.accel.set(accel3D.x,accel3D.z);
+        var accel3D = new THREE.Vector3(0,0,0);
+        accel3D.subVectors(mouse3D,this.position);
+        this.accel = new THREE.Vector2(accel3D.x,accel3D.z).normalize().multiplyScalar(this.MAXACCEL);
         super.update();
     }
 

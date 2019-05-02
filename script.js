@@ -60,6 +60,10 @@ function onKeyPress(event) {
     scene.onKeyPress(event);
 }
 
+function onKeyDown(event) {
+    scene.onKeyDown(event)
+}
+
 function onKeyUp(event) {
     scene.onKeyUp(event)
 }
@@ -85,6 +89,7 @@ $(function () {
   window.addEventListener ("resize", onWindowResize);
   window.addEventListener ("mousemove", onMouseMove);
   window.addEventListener ("keypress", onKeyPress)
+  window.addEventListener ("keydown", onKeyDown)
   window.addEventListener ("keyup", onKeyUp)
   window.addEventListener ("mousedown", onMouseDown)
   window.addEventListener ("mouseup", onMouseUp)

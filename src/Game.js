@@ -15,21 +15,6 @@ function timeSinceLastFrame(){
 	return (gameTime-gameTime_prev)/1000.0;
 }
 
-//Devuelve un numero acotado entre un minimo y un maximo
-function clamp(min, num, max) {
-    return Math.max(min, Math.min(num, max));
-}
-
-//Pasa un angulo de grados a radianes
-function toRadians(angle){
-    return angle*Math.PI/180;
-}
-
-//Pasa un anglulo de radianesa grados
-function toDegrees(angle){
-	return angle*180/Math.PI;
-}
-
 class Game extends THREE.Scene {
 	constructor (unRenderer) {
 		super();
@@ -38,6 +23,7 @@ class Game extends THREE.Scene {
 		this.createCamera (unRenderer);
 		this.createGround ();
 		this.projectiles = Array();
+		this.updatables = Array();
 		this.hitboxes = Array();
 
 		this.axis = new THREE.AxesHelper (5);
@@ -45,6 +31,15 @@ class Game extends THREE.Scene {
 
 		this.model = new Player();
 		this.add (this.model);
+		this.updatables.push(this.model);
+
+		/*this.ast = new Asteroid(4, 10, 10);
+		this.add(this.ast);
+		this.updatables.push(this.ast);
+
+		this.ast2 = new Asteroid(6, -10, -10);
+		this.add(this.ast2);
+		this.updatables.push(this.ast2);*/
 
 		gameTime = Date.now();
 		mouse = new THREE.Vector2();
@@ -96,6 +91,10 @@ class Game extends THREE.Scene {
 		this.model.onKeyPress(event);
 	}
 
+	onKeyDown(event) {
+		this.model.onKeyDown(event);
+	}
+
 	onKeyUp(event) {
 		this.model.onKeyUp(event);
 		if(event.key == 'z') {
@@ -122,7 +121,9 @@ class Game extends THREE.Scene {
 			mouse3D = ( pickedObjects[0].point );
 		}
 
-		this.model.update();
+		for(var i = 0; i < this.updatables.length; i++) {
+			this.updatables[i].update();
+		}
 
 		//Dereferencia proyectiles fuera de juego
 		for(var i = 0; i < this.projectiles.length; i++) {
@@ -131,6 +132,9 @@ class Game extends THREE.Scene {
 				this.remove(this.projectiles[i]);
 				this.projectiles.splice(i,1);
 			}
+		}
+
+		for(var i = 0; i < this.projectiles.length; i++) {
 		}
 	}
 }
