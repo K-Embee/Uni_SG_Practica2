@@ -5,13 +5,16 @@ class Player extends Movable {
 		this.geometry = new THREE.BoxGeometry (1,1,1);
 		this.material = new THREE.MeshPhongMaterial({color: 0xff0000});
 		this.weapons = [
-			new ProjectileGenerator(this),
+			new ProjectileGenerator_CHARGE(this),
 			new ProjectileGenerator_SPREAD(this),
 			new ProjectileGenerator_RAPIDFIRE(this),
 			new ProjectileGenerator_HOMING(this)
 		];
 		this.active_weapon = this.weapons[0];
+		this.last_weapon_switch = 0;
 		this.thrust = Array(4).fill(false);
+
+		this.WEAPON_SWITCH_COOLDOWN = 500 //Tiempo en milisegundos entre poder cambiar de arma
 
 		this.MAXSPEED = 20; //Velocidades en distancia/segundo
 		this.MAXACCEL = 30; //Aceleración en distancia/segundo^2
@@ -20,16 +23,22 @@ class Player extends Movable {
 	}
 
 	onKeyDown(event) {
+		if(gameTime < this.last_weapon_switch + 500) return;
 		if(event.key == 1) {
+			this.last_weapon_switch = gameTime;
 			this.active_weapon = this.weapons[Player.KEYPRESS_1];
+			this.active_weapon.chargeStart = gameTime;
 		}
 		else if(event.key == 2) {
+			this.last_weapon_switch = gameTime;
 			this.active_weapon = this.weapons[Player.KEYPRESS_2];
 		}
 		else if(event.key == 3) {
+			this.last_weapon_switch = gameTime;
 			this.active_weapon = this.weapons[Player.KEYPRESS_3];
 		}
 		else if(event.key == 4) {
+			this.last_weapon_switch = gameTime;
 			this.active_weapon = this.weapons[Player.KEYPRESS_4];
 		}
 	}
@@ -96,11 +105,11 @@ class Player extends Movable {
 		if(obj instanceof Projectile && obj.parent_object != this) {
 			this.health -= obj.damage;
 		}
-			
+
 		if(obj instanceof Asteroid) {
 			super.asteroidBounce(obj);
 		}
-		
+
 		return false;
 	}
 

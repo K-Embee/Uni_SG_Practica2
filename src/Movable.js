@@ -35,39 +35,44 @@ class Movable extends THREE.Mesh {
 		this.posX += (this.speed.x*timeSinceLastFrame());
 		this.posZ += (this.speed.y*timeSinceLastFrame());
 	}
-	
+
 	checkCollision(obj) { //Comprueba si se colisiona con un objeto o no. Devuelve TRUE si se ha de borrar debido a esa colisión, FALSE si no
 		if(this.radius + obj.radius > this.position.distanceTo(obj.position)) {
 			return this.collide(obj);
 		}
 		return false;
 	}
-	
+
 	collide(obj) { //Realiza la colisión con un objeto. Devuelve TRUE si se ha de borrar debido a esa colisión, FALSE si no
 		return false;
 	}
-	
+
 	asteroidBounce(obj) {
 		var tangent = this.position.clone().sub(obj.position);
 		var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
-		var angle = speed3D.angleTo(tangent);
+		var angle = speed3D.negate().angleTo(tangent);
 		var axis = new THREE.Vector3(0,1,0);
-		if(Math.abs(angle) < Math.PI/2) {
+
+		if(this instanceof Asteroid && this.radius > obj.radius) {
+			return ; //Para dar un cierto peso a los asteroides mas grandes
+		}
+
+		if(angle && angle < Math.PI/4) {
 			speed3D.applyAxisAngle(axis, angle*2);
 		}
 		else {
-			speed3D = tangent.clone().setLength(Math.max(obj.speed.length()+3,this.speed.length()));
+			speed3D = tangent.clone().setLength(Math.max(obj.speed.length()+2.5,this.speed.length()));
 		}
 		this.speed.x = speed3D.x; this.speed.y = speed3D.z;
 	}
-	
+
 	OOBCheck() { //Comprueba si un objeto esta fuera de ambito. Devuelve TRUE si se ha de borrar
 		if(Math.abs(this.posX) > 40 || Math.abs(this.posZ) > 40) {
 			this.wrap();
 		}
 		return false;
 	}
-	
+
 	wrap() { //Mueve un objeto al otro lado de la pantalla
 		console.log("that's a wrap, folks");
 		if(Math.abs(this.posX) > 40) {

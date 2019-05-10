@@ -7,7 +7,7 @@ class ProjectileGenerator {
         this.projectile_speed = 40;
         this.color = color_goldenrod;
         this.firing = false;
-        this.damage = 30
+        this.damage = 30;
     }
 
     onMouseDown(event) {
@@ -26,7 +26,9 @@ class ProjectileGenerator {
         if(this.firing && this.last_shot + this.cooldown < gameTime ) {
             this.generate(target);
             this.last_shot = gameTime;
+            return true;
         }
+        return false;
     }
 
     generate(target) {
@@ -36,12 +38,56 @@ class ProjectileGenerator {
     }
 }
 
+class ProjectileGenerator_CHARGE extends ProjectileGenerator {
+    constructor(parent){
+        super(parent);
+        this.cooldown = 250;
+        this.projectile_speed = 40;
+        this.pellets = 5;
+        this.damage = 10;
+        this.chargeStart = 0;
+        this.TIME_TO_MAX_CHARGE = 3000;
+        this.TIME_TO_MIN_CHARGE = 250;
+        this.MAX_CHARGE_DAMAGE = 150;
+    }
+
+    update(target) {
+        if(super.update(target)) {
+            this.firing = false;
+            return true;
+        }
+        return false;
+    }
+
+    onMouseDown(event) {
+        if(event.button == 0) {
+            this.chargeStart = gameTime;
+            this.firing = false;
+        }
+    }
+
+    onMouseUp(event) {
+        if(event.button == 0) {
+            this.firing = true;
+        }
+    }
+
+    generate(target) {
+        var projectile = super.generate(target);
+        var chargeRatio = (gameTime - this.chargeStart - this.TIME_TO_MIN_CHARGE)/(this.TIME_TO_MAX_CHARGE-this.TIME_TO_MIN_CHARGE);
+        chargeRatio = THREE.Math.clamp(chargeRatio,0,1);
+        projectile.scale.set(chargeRatio*2+1,chargeRatio*2+1,chargeRatio*2+1);
+        projectile.damage = this.damage+chargeRatio*(this.MAX_CHARGE_DAMAGE-this.damage);
+    }
+}
+
 class ProjectileGenerator_SPREAD extends ProjectileGenerator {
     constructor(parent){
         super(parent);
         this.cooldown = 750;
         this.projectile_speed = 40;
-        this.pellets = 5
+        this.pellets = 5;
+        this.damage = 10;
         this.spread_angle = 45;
     }
 
@@ -62,7 +108,7 @@ class ProjectileGenerator_RAPIDFIRE extends ProjectileGenerator {
         super(parent);
         this.cooldown = 150;
         this.projectile_speed = 70;
-        this.damage = this.damage/3
+        this.damage = 10;
         this.inaccuracy = 10;
     }
 
@@ -81,11 +127,13 @@ class ProjectileGenerator_HOMING extends ProjectileGenerator {
         this.color = color_darkpurple;
         this.cooldown = 800;
         this.projectile_speed = 20;
-        this.damage = this.damage*3
+        this.damage = 90;
     }
 
     generate(target) {
-        new Projectile_HOMING(this.parent_object, this.parent_object.position,target,this.projectile_speed,this.color);
+        var projectile = new Projectile_HOMING(this.parent_object, this.parent_object.position,target,this.projectile_speed,this.color);
+		projectile.damage = this.damage;
+		return projectile;
     }
 }
 
@@ -102,7 +150,14 @@ class ProjectileGeneratorEnemy extends ProjectileGenerator {
     onMouseUp(event) {
     }
 
-	
+
+}
+
+class ProjectileGeneratorEnemy_BASIC extends ProjectileGenerator {
+    constructor(parent){
+		super(parent);
+		this.damage = 30;
+    }
 }
 
 class Projectile extends Movable {
@@ -161,7 +216,7 @@ class Projectile_HOMING extends Projectile {
         super(parent, origin, destination, scalar_speed, color);
         this.spawn_time = gameTime;
         this.MAXACCEL = 30;
-        this.CONSTANT_SPEED = true;
+        this.CONSTANT_SPEED = false;
     }
 
     update() {
