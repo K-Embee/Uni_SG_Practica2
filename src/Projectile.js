@@ -30,7 +30,7 @@ class ProjectileGenerator {
     }
 
     generate() {
-        new Projectile(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
+        return new Projectile(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
     }
 }
 
@@ -45,8 +45,12 @@ class ProjectileGenerator_SPREAD extends ProjectileGenerator {
 
     generate() {
         for(var i = 0; i < this.pellets; i++){
+            var projectile = super.generate();
             var angle = this.spread_angle*(i/(this.pellets-1))-this.spread_angle/2.0;
-            new Projectile_SPREAD(this.parent_object.position,mouse3D,this.projectile_speed,this.color,angle);
+            var axis = new THREE.Vector3(0,1,0);
+		    var speed3D = new THREE.Vector3(projectile.speed.x,0,projectile.speed.y);
+		    speed3D.applyAxisAngle(axis, THREE.Math.degToRad(angle));
+		    projectile.speed.set(speed3D.x,speed3D.z);
         }
     }
 }
@@ -57,10 +61,15 @@ class ProjectileGenerator_RAPIDFIRE extends ProjectileGenerator {
         this.cooldown = 150;
         this.projectile_speed = 70;
         this.damage = this.damage/3
+        this.inaccuracy = 10;
     }
 
     generate() {
-        new Projectile_RAPIDFIRE(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
+        var projectile = super.generate();
+        var axis = new THREE.Vector3(0,1,0);
+        var speed3D = new THREE.Vector3(projectile.speed.x,0,projectile.speed.y);
+        speed3D.applyAxisAngle(axis, THREE.Math.degToRad(Math.random()*this.inaccuracy-this.inaccuracy/2));
+        projectile.speed.set(speed3D.x,speed3D.z);
     }
 }
 
@@ -89,6 +98,7 @@ class Projectile extends Movable {
         this.posZ = origin.z;
         this.speed = new THREE.Vector2(destination.x,destination.z).sub(new THREE.Vector2(origin.x,origin.z));
         this.speed.normalize().multiplyScalar(scalar_speed);
+        this.damage = 0;
 
         this.MAXSPEED = scalar_speed;
         //this.hitbox = new Hitbox(0.5, this);
@@ -96,7 +106,6 @@ class Projectile extends Movable {
         //this.light.position.copy(this.position);
         //this.add(this.light);
         scene.add(this);
-        scene.projectiles.push(this);
     }
 
     update() {
@@ -104,7 +113,7 @@ class Projectile extends Movable {
     }
 
     OOBCheck() {
-        if(Math.abs(this.position.x) > 200 || Math.abs(this.position.z) > 200) {
+        if(Math.abs(this.position.x) > 40 || Math.abs(this.position.z) > 40) {
             this.dispose();
             return true;
         }
@@ -114,26 +123,6 @@ class Projectile extends Movable {
     dispose() {
         this.geometry.dispose();
         this.material.dispose();
-    }
-}
-
-class Projectile_SPREAD extends Projectile {
-    constructor(origin, destination, scalar_speed, color, spread_angle) {
-        super(origin, destination, scalar_speed, color);
-        var axis = new THREE.Vector3(0,1,0);
-        var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
-        speed3D.applyAxisAngle(axis, THREE.Math.degToRad(spread_angle));
-        this.speed.set(speed3D.x,speed3D.z);
-    }
-}
-class Projectile_RAPIDFIRE extends Projectile {
-    constructor(origin, destination, scalar_speed, color, spread_angle) {
-        super(origin, destination, scalar_speed, color);
-        this.inaccuracy = 10;
-        var axis = new THREE.Vector3(0,1,0);
-        var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
-        speed3D.applyAxisAngle(axis, THREE.Math.degToRad(Math.random()*this.inaccuracy-this.inaccuracy/2));
-        this.speed.set(speed3D.x,speed3D.z);
     }
 }
 

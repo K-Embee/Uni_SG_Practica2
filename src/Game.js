@@ -1,5 +1,6 @@
-var gameTime = null;
+var gameTime = 0 //null; //cambiar por esto si se quiere usar la fecha en vez de diferencia de frames/seg
 var gameTime_prev = null;
+var frameRate = 1/60.0; //Velocidad de three.js
 
 var mouse = null;
 var mouse3D = null;
@@ -22,24 +23,24 @@ class Game extends THREE.Scene {
 		this.createLights ();
 		this.createCamera (unRenderer);
 		this.createGround ();
-		this.projectiles = Array();
 		this.updatables = Array();
-		this.hitboxes = Array();
 
 		this.axis = new THREE.AxesHelper (5);
 		this.add (this.axis);
 
-		this.model = new Player();
+		/*this.model = new Player();
 		this.add (this.model);
 		this.updatables.push(this.model);
 
-		/*this.ast = new Asteroid(4, 10, 10);
+		this.ast = new Asteroid(4, 10, 10);
 		this.add(this.ast);
 		this.updatables.push(this.ast);
 
 		this.ast2 = new Asteroid(6, -10, -10);
 		this.add(this.ast2);
 		this.updatables.push(this.ast2);*/
+
+		this.gameHandler = new GameHandler();
 
 		gameTime = Date.now();
 		mouse = new THREE.Vector2();
@@ -82,7 +83,7 @@ class Game extends THREE.Scene {
 		this.camera.updateProjectionMatrix();
 	}
 
-	onMouseMove() {
+	onMouseMove(event) {
 		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 		mouse.y = 1 - 2 * (event.clientY / window.innerHeight);
 	}
@@ -97,10 +98,6 @@ class Game extends THREE.Scene {
 
 	onKeyUp(event) {
 		this.model.onKeyUp(event);
-		if(event.key == 'z') {
-			console.log("==========DEBUG INFORMATION==========");
-			console.log("Projectiles:" + this.projectiles.length);
-		}
 	}
 
 	onMouseDown(event) {
@@ -111,8 +108,13 @@ class Game extends THREE.Scene {
 	}
 
 	update () {
+		if(!this.model) {
+			this.gameHandler.spawnPlayer();
+			this.gameHandler.spawnHostiles();
+			this.gameHandler.spawnHostiles();
+		}
 		gameTime_prev = gameTime;
-		gameTime = Date.now();
+		gameTime = gameTime+1000*frameRate //Date.now(); //ver linea 1
 
 		var raycaster = new  THREE.Raycaster();
 		raycaster.setFromCamera (mouse, scene.camera);
@@ -126,15 +128,37 @@ class Game extends THREE.Scene {
 		}
 
 		//Dereferencia proyectiles fuera de juego
-		for(var i = 0; i < this.projectiles.length; i++) {
-			this.projectiles[i].update();
-			while(i < this.projectiles.length && this.projectiles[i].OOBCheck()){
-				this.remove(this.projectiles[i]);
-				this.projectiles.splice(i,1);
+		for(var i = this.updatables.length-1; i >= 0; i--) {
+			this.updatables[i].update();
+			if(this.updatables[i].OOBCheck()){
+				this.remove(this.updatables[i]);
+				this.updatables.splice(i,1);
 			}
 		}
-
-		for(var i = 0; i < this.projectiles.length; i++) {
+		
+		var objs_2_del = Array();
+		
+		//Detección de colisiones
+		for(var i = 0; i < this.updatables.length; i++) {
+			let del_obj = false;
+			for(var j = 0; j < this.updatables.length; j++) {
+				if(i == j) continue;
+				del_obj = this.updatables[i].checkCollision(this.updatables[j]);
+			}
+			if(del_obj) objs_2_del.push(i);
+		}
+		
+		//Borrar objetos destruidos mediante colisión
+		for(var i = objs_2_del.length-1; i >= 0; i--) {
+			this.remove(this.updatables[objs_2_del[i]]);
+			this.updatables.splice(objs_2_del[i],1);
+		}
+		
+		//Debugging
+		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
+		if(gameTime > 10000+this.debugLogGameTime) {
+			this.debugLogGameTime = gameTime;
+			console.log(this.updatables);
 		}
 	}
 }

@@ -16,6 +16,7 @@ class Player extends Movable {
 		this.MAXSPEED = 20; //Velocidades en distancia/segundo
 		this.MAXACCEL = 30; //Aceleración en distancia/segundo^2
 		this.FRICTION = 300; //Velocidad que se resta por segundo mientras no se acelera
+		this.radius = 0.5;
 	}
 
 	onKeyDown(event) {
@@ -83,9 +84,10 @@ class Player extends Movable {
 		for(let i = 0; i < this.thrust.length; i++) {
 			if(this.thrust[i] == true) { thrusting = true; break; }
 		}
-		if(!thrusting && this.speed.x != 0 && this.speed.y != 0){
+		if(!thrusting && (Math.abs(this.speed.x) > 1 || Math.abs(this.speed.y) > 1)){
 			this.accel.copy(this.speed.clone().normalize().multiplyScalar(this.FRICTION*timeSinceLastFrame()).negate());
 		}
+		else if(!thrusting && Math.abs(this.speed.x) <= 1 && Math.abs(this.speed.y) <= 1) { this.speed.x = 0; this.speed.y = 0; this.accel.x = 0; this.accel.y = 0; }
 
 		super.updateMove();
 	}
