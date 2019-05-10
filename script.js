@@ -52,8 +52,8 @@ function onWindowResize () {
   renderer.setSize (window.innerWidth, window.innerHeight);
 }
 
-function onMouseMove() {
-    scene.onMouseMove();
+function onMouseMove(event) {
+    scene.onMouseMove(event);
 }
 
 function onKeyPress(event) {
