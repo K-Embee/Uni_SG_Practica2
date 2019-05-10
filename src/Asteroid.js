@@ -11,7 +11,7 @@ class Asteroid extends Movable {
 		this.posZ = posZ;
         this.position.set(this.posX, 0, this.posZ);
 		this.radius = radius;
-		this.health = 50*radius;
+		this.health = 20*radius;
 		
 		this.speed = new THREE.Vector2(posX,posZ).normalize().multiplyScalar(this.MAXSPEED).negate();
 	}
@@ -19,6 +19,9 @@ class Asteroid extends Movable {
 	collide(obj) {
 		if(obj instanceof Projectile) {
 			this.health -= obj.damage;
+		}
+		if(obj instanceof Asteroid) {
+			super.asteroidBounce(obj);
 		}
 		return (this.health <= 0);
 	}

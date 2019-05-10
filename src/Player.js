@@ -98,17 +98,7 @@ class Player extends Movable {
 		}
 			
 		if(obj instanceof Asteroid) {
-			var tangent = this.position.clone().sub(obj.position);
-			var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
-			var angle = speed3D.angleTo(tangent);
-			if(Math.abs(angle) > Math.PI/2) {
-				var axis = new THREE.Vector3(0,1,0);
-				speed3D.applyAxisAngle(axis, angle*2);
-			}
-			else {
-				speed3D = tangent.clone().setLength(Math.max(obj.speed.length()+5,this.speed.length()));
-			}
-			this.speed.x = speed3D.x; this.speed.y = speed3D.z;
+			super.asteroidBounce(obj);
 		}
 		
 		return false;

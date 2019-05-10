@@ -47,6 +47,20 @@ class Movable extends THREE.Mesh {
 		return false;
 	}
 	
+	asteroidBounce(obj) {
+		var tangent = this.position.clone().sub(obj.position);
+		var speed3D = new THREE.Vector3(this.speed.x,0,this.speed.y);
+		var angle = speed3D.angleTo(tangent);
+		var axis = new THREE.Vector3(0,1,0);
+		if(Math.abs(angle) < Math.PI/2) {
+			speed3D.applyAxisAngle(axis, angle*2);
+		}
+		else {
+			speed3D = tangent.clone().setLength(Math.max(obj.speed.length()+3,this.speed.length()));
+		}
+		this.speed.x = speed3D.x; this.speed.y = speed3D.z;
+	}
+	
 	OOBCheck() { //Comprueba si un objeto esta fuera de ambito. Devuelve TRUE si se ha de borrar
 		if(Math.abs(this.posX) > 40 || Math.abs(this.posZ) > 40) {
 			this.wrap();

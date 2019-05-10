@@ -34,7 +34,9 @@ class Enemy extends Movable {
 		if(obj instanceof Projectile && obj.parent_object != this) {
 			this.health -= obj.damage;
 		}
-		console.log("health: " + this.health);
+		if(obj instanceof Asteroid) {
+			super.asteroidBounce(obj);
+		}
 		return (this.health <= 0);
 	}
 
