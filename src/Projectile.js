@@ -157,8 +157,8 @@ class Projectile extends Movable {
 }
 
 class Projectile_HOMING extends Projectile {
-    constructor(origin, destination, scalar_speed, color, spread_angle) {
-        super(origin, destination, scalar_speed, color);
+    constructor(parent, origin, destination, scalar_speed, color) {
+        super(parent, origin, destination, scalar_speed, color);
         this.spawn_time = gameTime;
         this.MAXACCEL = 30;
         this.CONSTANT_SPEED = true;
@@ -176,6 +176,6 @@ class Projectile_HOMING extends Projectile {
             this.dispose();
             return true;
         }
-        super.OOBCheck();
+        return super.OOBCheck();
     }
 }

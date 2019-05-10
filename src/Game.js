@@ -113,8 +113,9 @@ class Game extends THREE.Scene {
 			this.gameHandler.spawnPlayer();
 			//this.gameHandler.spawnAsteroids();
 			//this.gameHandler.spawnAsteroids();
-			this.gameHandler.spawnHostiles();
+			//this.gameHandler.spawnHostiles();
 		}
+		this.gameHandler.update();
 		gameTime_prev = gameTime;
 		gameTime = gameTime+1000*frameRate //Date.now(); //ver linea 1
 
