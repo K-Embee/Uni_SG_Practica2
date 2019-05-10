@@ -14,7 +14,6 @@ class Movable extends THREE.Mesh {
 		this.speed = new THREE.Vector2(0,0)
 		this.accel = new THREE.Vector2(0,0);
 		scene.updatables.push(this);
-		this.collision_immune = Array();
 	}
 
 	update () { //Actualiza la posición, sobrecargado en hijos
@@ -81,5 +80,11 @@ class Movable extends THREE.Mesh {
 		if(Math.abs(this.posZ) > 40) {
 			this.posZ = (this.posZ > 0) ? -40 : 40;
 		}
+	}
+
+	dispose() { //Elimina un objeto
+		this.geometry.dispose();
+		this.material.dispose();
+		this.collision_immune = Array();
 	}
 }

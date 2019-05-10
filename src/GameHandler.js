@@ -15,7 +15,7 @@ class GameHandler {
 		var top_or_side = (Math.random() < 0.5);
 		var posX = (top_or_side) ? Math.random()*40-20 : ((Math.random()<0.5)?20:-20);
 		var posY = (!top_or_side) ? Math.random()*40-20 : ((Math.random()<0.5)?20:-20);
-		var asteroid = new Asteroid(1+Math.random()*5, posX, posY );
+		var asteroid = new Asteroid(1+Math.random()*5, posX, posY, false);
 		scene.add(asteroid);
 	}
 
@@ -31,7 +31,6 @@ class GameHandler {
 		if(this.last_second+1000 <= gameTime) {
 			if(Math.random() < this.enemy_spawn_prob_per_sec) this.spawnHostiles();
 			this.last_second = gameTime;
-			console.log("a")
 		}
 		if(this.last_asteroid_spawn + this.asteroid_spawn_freq <= gameTime) {
 			this.spawnAsteroids();

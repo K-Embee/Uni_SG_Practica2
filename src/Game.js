@@ -138,9 +138,9 @@ class Game extends THREE.Scene {
 				this.updatables.splice(i,1);
 			}
 		}
-		
+
 		var objs_2_del = Array();
-		
+
 		//Detección de colisiones
 		for(var i = 0; i < this.updatables.length; i++) {
 			let del_obj = false;
@@ -150,13 +150,14 @@ class Game extends THREE.Scene {
 			}
 			if(del_obj) objs_2_del.push(i);
 		}
-		
+
 		//Borrar objetos destruidos mediante colisión
 		for(var i = objs_2_del.length-1; i >= 0; i--) {
+			this.updatables[objs_2_del[i]].dispose();
 			this.remove(this.updatables[objs_2_del[i]]);
 			this.updatables.splice(objs_2_del[i],1);
 		}
-		
+
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
 		if(gameTime > 10000+this.debugLogGameTime) {

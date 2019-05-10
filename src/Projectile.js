@@ -87,7 +87,7 @@ class ProjectileGenerator_SPREAD extends ProjectileGenerator {
         this.cooldown = 750;
         this.projectile_speed = 40;
         this.pellets = 5;
-        this.damage = 10;
+        this.damage = 15;
         this.spread_angle = 45;
     }
 
@@ -149,8 +149,6 @@ class ProjectileGeneratorEnemy extends ProjectileGenerator {
 
     onMouseUp(event) {
     }
-
-
 }
 
 class ProjectileGeneratorEnemy_BASIC extends ProjectileGenerator {
@@ -193,12 +191,6 @@ class Projectile extends Movable {
         }
         return false;
     }
-
-    dispose() {
-        this.geometry.dispose();
-        this.material.dispose();
-    }
-
 
 	collide(obj) {
 		if(obj instanceof Asteroid) {
