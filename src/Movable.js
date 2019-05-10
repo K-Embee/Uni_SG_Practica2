@@ -38,13 +38,14 @@ class Movable extends THREE.Mesh {
 	
 	checkCollision(obj) { //Comprueba si se colisiona con un objeto o no. Devuelve TRUE si se ha de borrar debido a esa colisión, FALSE si no
 		if(this.radius + obj.radius > this.position.distanceTo(obj.position)) {
-			return this.collide(obj);
+			var x = this.collide(obj);
+			if(this instanceof Projectile) console.log(x);
+			return x;
 		}
 		return false;
 	}
 	
 	collide(obj) { //Realiza la colisión con un objeto. Devuelve TRUE si se ha de borrar debido a esa colisión, FALSE si no
-		console.log("collided");
 		return false;
 	}
 	

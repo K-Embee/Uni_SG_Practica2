@@ -10,6 +10,7 @@ var color_goldenrod = 0xdaa520;
 var color_brown = 0x654321;
 var color_darkpurple = 0x800080;
 var color_pink = 0xff00ff;
+var color_brightgreen = 0x50ff50;
 
 //Devuelve la diff de tiempo entre este frame y el anterior
 function timeSinceLastFrame(){
@@ -110,7 +111,8 @@ class Game extends THREE.Scene {
 	update () {
 		if(!this.model) {
 			this.gameHandler.spawnPlayer();
-			this.gameHandler.spawnHostiles();
+			//this.gameHandler.spawnAsteroids();
+			//this.gameHandler.spawnAsteroids();
 			this.gameHandler.spawnHostiles();
 		}
 		gameTime_prev = gameTime;
@@ -143,7 +145,7 @@ class Game extends THREE.Scene {
 			let del_obj = false;
 			for(var j = 0; j < this.updatables.length; j++) {
 				if(i == j) continue;
-				del_obj = this.updatables[i].checkCollision(this.updatables[j]);
+				del_obj = (del_obj) ? del_obj : this.updatables[i].checkCollision(this.updatables[j]);
 			}
 			if(del_obj) objs_2_del.push(i);
 		}

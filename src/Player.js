@@ -71,7 +71,7 @@ class Player extends Movable {
 	update () {
 		super.update();
 		this.lookAt(mouse3D);
-		this.active_weapon.update();
+		this.active_weapon.update(mouse3D);
 	}
 
 

@@ -22,15 +22,17 @@ class ProjectileGenerator {
         }
     }
 
-    update() {
+    update(target) {
         if(this.firing && this.last_shot + this.cooldown < gameTime ) {
-            this.generate();
+            this.generate(target);
             this.last_shot = gameTime;
         }
     }
 
-    generate() {
-        return new Projectile(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
+    generate(target) {
+        var projectile = new Projectile(this.parent_object, this.parent_object.position,target,this.projectile_speed,this.color);
+		projectile.damage = this.damage;
+		return projectile;
     }
 }
 
@@ -43,9 +45,9 @@ class ProjectileGenerator_SPREAD extends ProjectileGenerator {
         this.spread_angle = 45;
     }
 
-    generate() {
+    generate(target) {
         for(var i = 0; i < this.pellets; i++){
-            var projectile = super.generate();
+            var projectile = super.generate(target);
             var angle = this.spread_angle*(i/(this.pellets-1))-this.spread_angle/2.0;
             var axis = new THREE.Vector3(0,1,0);
 		    var speed3D = new THREE.Vector3(projectile.speed.x,0,projectile.speed.y);
@@ -64,8 +66,8 @@ class ProjectileGenerator_RAPIDFIRE extends ProjectileGenerator {
         this.inaccuracy = 10;
     }
 
-    generate() {
-        var projectile = super.generate();
+    generate(target) {
+        var projectile = super.generate(target);
         var axis = new THREE.Vector3(0,1,0);
         var speed3D = new THREE.Vector3(projectile.speed.x,0,projectile.speed.y);
         speed3D.applyAxisAngle(axis, THREE.Math.degToRad(Math.random()*this.inaccuracy-this.inaccuracy/2));
@@ -82,15 +84,32 @@ class ProjectileGenerator_HOMING extends ProjectileGenerator {
         this.damage = this.damage*3
     }
 
-    generate() {
-        new Projectile_HOMING(this.parent_object.position,mouse3D,this.projectile_speed,this.color);
+    generate(target) {
+        new Projectile_HOMING(this.parent_object, this.parent_object.position,target,this.projectile_speed,this.color);
     }
 }
 
+class ProjectileGeneratorEnemy extends ProjectileGenerator {
+    constructor(parent){
+		super(parent);
+		this.firing = true;
+        this.color = color_brightgreen;
+    }
+
+    onMouseDown(event) {
+    }
+
+    onMouseUp(event) {
+    }
+
+	
+}
+
 class Projectile extends Movable {
-    constructor(origin, destination, scalar_speed, color) {
+    constructor(parent, origin, destination, scalar_speed, color) {
         super();
         //this.light = new THREE.PointLight(color, 10, 1, 1);
+		this.parent_object = parent;
         this.geometry = new THREE.SphereGeometry(0.5, 5, 5);
         this.material = new THREE.MeshLambertMaterial({ color: color, emissive: color });
         this.position.copy(origin);
@@ -124,6 +143,17 @@ class Projectile extends Movable {
         this.geometry.dispose();
         this.material.dispose();
     }
+
+
+	collide(obj) {
+		if(obj instanceof Asteroid) {
+			return true;
+		}
+		if((obj instanceof Player || obj instanceof Enemy) && this.parent_object != obj) {
+			return true;
+		}
+		return false;
+	}
 }
 
 class Projectile_HOMING extends Projectile {

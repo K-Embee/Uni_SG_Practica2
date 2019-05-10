@@ -4,11 +4,19 @@ class GameHandler {
 		scene.add(scene.model);
 	}
 
-	spawnHostiles() {
+	spawnAsteroids() {
 		var top_or_side = (Math.random() < 0.5);
 		var posX = (top_or_side) ? Math.random()*40-20 : ((Math.random()<0.5)?20:-20);
 		var posY = (!top_or_side) ? Math.random()*40-20 : ((Math.random()<0.5)?20:-20);
 		var asteroid = new Asteroid(1+Math.random()*5, posX, posY );
 		scene.add(asteroid);
+	}
+
+	spawnHostiles() {
+		var top_or_side = (Math.random() < 0.5);
+		var posX = (top_or_side) ? Math.random()*40-20 : ((Math.random()<0.5)?20:-20);
+		var posY = (!top_or_side) ? Math.random()*40-20 : ((Math.random()<0.5)?20:-20);
+		var enemy = new Enemy(posX, posY );
+		scene.add(enemy);
 	}
 }
