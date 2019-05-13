@@ -1,6 +1,8 @@
-var gameTime = 0 //null; //cambiar por esto si se quiere usar la fecha en vez de diferencia de frames/seg
+var gameTime = null;
 var gameTime_prev = null;
 var frameRate = 1/60.0; //Velocidad de three.js
+var scene_size_x = 45
+var scene_size_z = 20
 
 var mouse = null;
 var mouse3D = null;
@@ -43,15 +45,15 @@ class Game extends THREE.Scene {
 
 		this.gameHandler = new GameHandler();
 
-		gameTime = Date.now();
+		gameTime = 0 //null; //cambiar por esto si se quiere usar la fecha en vez de diferencia de frames/seg
 		mouse = new THREE.Vector2();
 		mouse3D = new THREE.Vector3();
 	}
 
 	createCamera (unRenderer) {
 		this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.camera.position.set (0, 30, 20);
-		var look = new THREE.Vector3 (0,0,0);
+		this.camera.position.set (0, 45, 10);
+		var look = new THREE.Vector3 (0,0,-2);
 		this.camera.lookAt(look);
 		this.add (this.camera);
   }
@@ -160,9 +162,18 @@ class Game extends THREE.Scene {
 
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
-		if(gameTime > 10000+this.debugLogGameTime) {
+		if(gameTime > 1000+this.debugLogGameTime) {
 			this.debugLogGameTime = gameTime;
 			console.log(this.updatables);
+			console.log(this.model.position)
+		}
+	}
+
+	unload() {
+		for(var i = this.updatables.length-1; i >= 0; i--) {
+			this.updatables[i].dispose(true);
+			this.remove(this.updatables[i]);
+			this.updatables.splice(i,1);
 		}
 	}
 }

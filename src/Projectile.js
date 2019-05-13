@@ -185,7 +185,7 @@ class Projectile extends Movable {
     }
 
     OOBCheck() {
-        if(Math.abs(this.position.x) > 40 || Math.abs(this.position.z) > 40) {
+        if(Math.abs(this.position.x) > scene.scene_size_x || Math.abs(this.position.z) > scene.scene_size_z) {
             this.dispose();
             return true;
         }

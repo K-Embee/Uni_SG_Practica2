@@ -66,7 +66,7 @@ class Movable extends THREE.Mesh {
 	}
 
 	OOBCheck() { //Comprueba si un objeto esta fuera de ambito. Devuelve TRUE si se ha de borrar
-		if(Math.abs(this.posX) > 40 || Math.abs(this.posZ) > 40) {
+		if(Math.abs(this.posX) > scene.scene_size_x || Math.abs(this.posZ) > scene.scene_size_z) {
 			this.wrap();
 		}
 		return false;
@@ -74,11 +74,11 @@ class Movable extends THREE.Mesh {
 
 	wrap() { //Mueve un objeto al otro lado de la pantalla
 		console.log("that's a wrap, folks");
-		if(Math.abs(this.posX) > 40) {
-			this.posX = (this.posX > 0) ? -40 : 40;
+		if(Math.abs(this.posX) > scene.scene_size_x) {
+			this.posX = (this.posX > 0) ? -scene.scene_size_x : scene.scene_size_x;
 		}
-		if(Math.abs(this.posZ) > 40) {
-			this.posZ = (this.posZ > 0) ? -40 : 40;
+		if(Math.abs(this.posZ) > scene.scene_size_z) { //-22 a  10 con esta camara
+			this.posZ = (this.posZ > 0) ? -scene.scene_size_z : scene.scene_size_z;
 		}
 	}
 

@@ -48,8 +48,19 @@ function render() {
 
 /// Función que actualiza la razón de aspecto de la cámara y el tamaño de la imagen que genera el renderer en función del tamaño que tenga la ventana
 function onWindowResize () {
-  scene.setCameraAspect (window.innerWidth / window.innerHeight);
-  renderer.setSize (window.innerWidth, window.innerHeight);
+  /*scene.setCameraAspect (window.innerWidth / window.innerHeight);
+  renderer.setSize (window.innerWidth, window.innerHeight);*/
+  var HORIZ = 21;
+  var VERT = 9;
+  console.log(window.innerWidth, window.innerHeight);
+  scene.setCameraAspect (HORIZ / VERT);
+  if(window.innerWidth > window.innerHeight*HORIZ/VERT) {
+      renderer.setSize (window.innerHeight*HORIZ/VERT, window.innerHeight);
+      console.log(window.innerWidth, window.innerHeight);
+  }
+  else {
+      renderer.setSize (window.innerWidth, window.innerWidth*VERT/HORIZ);
+  }
 }
 
 function onMouseMove(event) {
@@ -74,6 +85,10 @@ function onMouseDown(event) {
 
 function onMouseUp(event) {
     scene.onMouseUp(event);
+}
+
+function unload() {
+    scene.unload();
 }
 
 /// La función principal
