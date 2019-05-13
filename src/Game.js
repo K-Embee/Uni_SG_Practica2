@@ -52,8 +52,8 @@ class Game extends THREE.Scene {
 
 	createCamera (unRenderer) {
 		this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.camera.position.set (0, 45, 10);
-		var look = new THREE.Vector3 (0,0,-2);
+		this.camera.position.set (0, 45, 12);
+		var look = new THREE.Vector3 (0,0,2);
 		this.camera.lookAt(look);
 		this.add (this.camera);
   }
@@ -162,10 +162,11 @@ class Game extends THREE.Scene {
 
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
-		if(gameTime > 1000+this.debugLogGameTime) {
+		if(gameTime > 10000+this.debugLogGameTime) {
 			this.debugLogGameTime = gameTime;
 			console.log(this.updatables);
 			console.log(this.model.position)
+			console.log(scene_size_x + ", " + scene_size_z);
 		}
 	}
 
