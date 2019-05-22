@@ -82,8 +82,8 @@ class Movable extends THREE.Mesh {
 	}
 
 	dispose() { //Elimina un objeto
-		this.geometry.dispose();
-		this.material.dispose();
+		if(this.geometry) this.geometry.dispose();
+		if(this.material) this.material.dispose();
 		this.collision_immune = Array();
 	}
 }

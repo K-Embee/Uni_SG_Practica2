@@ -2,8 +2,9 @@ class Asteroid extends Movable {
 	constructor(radius, posX, posZ, oldSpeed) {
 		super();
 
-		this.geometry = new THREE.SphereGeometry (radius,8,8);
-		this.material = new THREE.MeshToonMaterial({color: color_brown});
+		//this.geometry = new THREE.SphereGeometry (radius,8,8);
+		//this.material = new THREE.MeshToonMaterial({color: color_brown});
+		rsc.getAsteroid(this, radius, color_brown);
 
 		this.MAXSPEED = 20/radius; //Velocidades en distancia/segundo
 		this.MAXACCEL = 2/radius;
@@ -47,6 +48,7 @@ class Asteroid extends Movable {
 	}
 
 	dispose(force) {
+		rsc.returnAsteroid(this);
 		score += Math.floor(this.radius)*10;
 		if(!force && this.health <= 0 && this.radius >= 3 && Math.random() < this.radius*0.2 ) {
 			let loops = Math.random();

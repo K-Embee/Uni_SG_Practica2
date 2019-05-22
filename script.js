@@ -9,6 +9,8 @@ renderer = null;
 /// El objeto que referencia a la interfaz gráfica de usuario
 gui = null;
 
+// El objeto de gestor de recursos
+rsc = null;
 
 /// Se crea y configura un renderer WebGL
 /**
@@ -121,6 +123,7 @@ $(function () {
   //gui = new dat.GUI();
 
   // Se crea la escena. La escena es una instancia de nuestra propia clase encargada de crear y gestionar todos los elementos que intervienen en la escena.
+  rsc = new ResourceHandler();
   scene = new Game (renderer.domElement);
   onWindowResize ();
   // Finalmente, realizamos el primer renderizado.

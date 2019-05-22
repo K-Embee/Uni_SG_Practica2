@@ -76,7 +76,7 @@ class ProjectileGenerator_CHARGE extends ProjectileGenerator {
         var projectile = super.generate(target);
         var chargeRatio = (gameTime - this.chargeStart - this.TIME_TO_MIN_CHARGE)/(this.TIME_TO_MAX_CHARGE-this.TIME_TO_MIN_CHARGE);
         chargeRatio = THREE.Math.clamp(chargeRatio,0,1);
-        projectile.scale.set(chargeRatio*2+1,chargeRatio*2+1,chargeRatio*2+1);
+        projectile.scale.multiply(new THREE.Vector3(chargeRatio*2+1,chargeRatio*2+1,chargeRatio*2+1));
         projectile.damage = this.damage+chargeRatio*(this.MAX_CHARGE_DAMAGE-this.damage);
     }
 }
@@ -163,8 +163,11 @@ class Projectile extends Movable {
         super();
         //this.light = new THREE.PointLight(color, 10, 1, 1);
 		this.parent_object = parent;
-        this.geometry = new THREE.SphereGeometry(0.5, 5, 5);
-        this.material = new THREE.MeshLambertMaterial({ color: color, emissive: color });
+		this.radius = 0.5;
+        //this.geometry = new THREE.SphereGeometry(0.5, 5, 5);
+        //this.material = new THREE.MeshLambertMaterial({ color: color, emissive: color });
+        //Obtencion de recursos mediante el resource handler
+        rsc.getProjectile(this, this.radius, color);
         this.position.copy(origin);
         this.posX = origin.x;
         this.posZ = origin.z;
@@ -200,6 +203,11 @@ class Projectile extends Movable {
 			return true;
 		}
 		return false;
+	}
+	
+	dispose() {
+		rsc.returnProjectile(this);
+		super.dispose()
 	}
 }
 

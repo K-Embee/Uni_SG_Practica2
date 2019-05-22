@@ -1,7 +1,7 @@
 var gameTime = null;
 var gameTime_prev = null;
 var startTime = null;
-var frameRate = 1/30.0; //Velocidad de three.js
+var frameRate = 1/60.0; //Velocidad de three.js
 var scene_size_x = 45;
 var scene_size_z = 20;
 var started = false;
