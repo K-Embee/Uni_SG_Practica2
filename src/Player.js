@@ -14,6 +14,8 @@ class Player extends Movable {
 		this.last_weapon_switch = 0;
 		this.thrust = Array(4).fill(false);
 
+		this.last_health = this.health;
+
 		this.WEAPON_SWITCH_COOLDOWN = 500 //Tiempo en milisegundos entre poder cambiar de arma
 
 		this.MAXSPEED = 20; //Velocidades en distancia/segundo
@@ -107,10 +109,11 @@ class Player extends Movable {
 		}
 
 		if(obj instanceof Asteroid) {
+			this.health -= 10;
 			super.asteroidBounce(obj);
 		}
 
-		return false;
+		return (this.health <= 0);
 	}
 
 }

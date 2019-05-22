@@ -1,7 +1,8 @@
 class GameHandler {
 	constructor() {
-		this.asteroid_spawn_freq = 3000;
-		this.enemy_spawn_prob_per_sec = 0.065;
+		this.asteroid_spawn_freq = 6500;
+		this.enemy_spawn_prob_per_sec = 0.035;
+		this.life_spawn_prob_per_sec = 0.015;
 		this.last_second = gameTime;
 		this.last_asteroid_spawn = gameTime;
 	}

@@ -13,11 +13,12 @@ class Enemy extends Movable {
 		this.radius = 1;
 		this.health = 35;
 		this.weapon = new ProjectileGeneratorEnemy(this);
-		
+
 		this.speed = new THREE.Vector2(posX,posZ).normalize().multiplyScalar(this.MAXSPEED).negate();
 	}
 
 	update(){
+		if(!scene.model) return;
 		super.update();
 		this.weapon.update(scene.model.position);
 		this.lookAt(scene.model.position);
@@ -29,7 +30,7 @@ class Enemy extends Movable {
 		this.accel.x = accel3D.x; this.accel.y = accel3D.z;
 		super.updateMove()
 	}
-	
+
 	collide(obj) {
 		if(obj instanceof Projectile && obj.parent_object != this) {
 			this.health -= obj.damage;
@@ -39,7 +40,7 @@ class Enemy extends Movable {
 		}
 		return (this.health <= 0);
 	}
-	
+
 	dispose() {
 		score += 1000;
 		super.dispose();

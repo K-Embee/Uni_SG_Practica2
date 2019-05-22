@@ -14,6 +14,7 @@
     <script type="text/javascript" src="src/ResourceHandler.js"></script>
     <script type="text/javascript" src="src/Movable.js"></script>
     <script type="text/javascript" src="src/Asteroid.js"></script>
+    <script type="text/javascript" src="src/PowerUps.js"></script>
     <script type="text/javascript" src="src/Projectile.js"></script>
     <script type="text/javascript" src="src/Player.js"></script>
     <script type="text/javascript" src="src/Enemy.js"></script>
@@ -25,7 +26,6 @@
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-			position: fixed;
 			text-align: center;
         }
         body{
@@ -42,29 +42,46 @@
 			font-family: "Arial", sans-serif;
 			color: white;
 		}
+        #ui{
+            position: fixed;
+			top: 2.5%;
+			left: 2.5%;
+			pointer-events: none;
+        }
 		#score{
 			font-family: "Arial", sans-serif;
 			font-weight: 1000;
 			font-size: 2em;
 			color: white;
-			position: fixed;
-			top: 2.5%;
-			left: 2.5%;
-			pointer-events: none;
+		}
+        #hp{
+			width: 100px;
+            height: 10px;
+            background-color: #00ff00;
+            display: inline-block;
+            margin-bottom: 7px;
+            margin-left: 7px;
 		}
 		#WebGL-output{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
 			text-align: center;
 		}
     </style>
 </head>
 <body onunload="unload()">
-<span  class="container">
-<h1>Asteroides</h1>
-<h2 onclick="start()">Pulse aqui para jugar</h2>
-</span>
 <!-- Div which will hold the Output -->
 <div id="WebGL-output">
-<span  id="score">000000</span>
+    <div id="ui">
+        <span  id="score">000000</span><span id="hp"></span>
+    </div>
+    <span  class="container">
+        <h1>Asteroides</h1>
+        <h2 onclick="start()">Pulse aqui para jugar</h2>
+    </span>
 </div>
 </body>
 </html>

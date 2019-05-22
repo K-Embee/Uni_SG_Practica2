@@ -13,10 +13,11 @@ var mouse3D = null;
 
 var color_gold = 0xffd700
 var color_goldenrod = 0xdaa520;
-var color_brown = 0x433221;
+var color_brown = 0xab8054;
 var color_darkpurple = 0x800080;
 var color_pink = 0xff00ff;
 var color_brightgreen = 0x50ff50;
+var color_lightblue = 0x3366ff;
 
 //Devuelve la diff de tiempo entre este frame y el anterior
 function timeSinceLastFrame(){
@@ -165,7 +166,15 @@ class Game extends THREE.Scene {
 			this.updatables.splice(objs_2_del[i],1);
 		}
 
-		//Puntuación
+		//UI
+		if(this.model && this.model.last_health != this.model.health) {
+			var lifebar = document.getElementById("hp");
+			lifebar.style.width = this.model.health + "px";
+			lifebar.style.background_color = (this.model.health*0xff)<<8 & ((1-this.model.health)*0xff)<<16; //Interpola color entre cerde y rojo
+			this.model.last_health = this.model.health;
+		}
+		else if(!this.model && started) document.getElementById("hp").style.display = "none";
+
 		if(score != last_score) {
 			console.log(score);
 			last_score = score;
@@ -173,7 +182,7 @@ class Game extends THREE.Scene {
 			while(str_score.length < 9) str_score = "0" + str_score;
 			document.getElementById("score").innerHTML = str_score;
 		}
-		
+
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
 		if(gameTime > 10000+this.debugLogGameTime) {
