@@ -1,11 +1,12 @@
 var gameTime = null;
 var gameTime_prev = null;
 var startTime = null;
-var frameRate = 1/60.0; //Velocidad de three.js
+var frameRate = 1/30.0; //Velocidad de three.js
 var scene_size_x = 45;
 var scene_size_z = 20;
 var started = false;
 var score = 0;
+var last_score = -1;
 
 var mouse = null;
 var mouse3D = null;
@@ -165,10 +166,14 @@ class Game extends THREE.Scene {
 		}
 
 		//Puntuación
-		var str_score = score.toString();
-		while(str_score.length < 9) "0" + str_score;
-		document.getElementById("score").innerHTML = str_score;
-
+		if(score != last_score) {
+			console.log(score);
+			last_score = score;
+			var str_score = String(score);
+			while(str_score.length < 9) str_score = "0" + str_score;
+			document.getElementById("score").innerHTML = str_score;
+		}
+		
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
 		if(gameTime > 10000+this.debugLogGameTime) {
