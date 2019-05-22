@@ -21,21 +21,46 @@
         .container{
             margin: 0;
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
+			position: fixed;
+			text-align: center;
         }
         body{
             margin: 0;
             overflow: hidden;
         }
+		h1{
+			font-family: "Arial", sans-serif;
+			font-weight: 1000;
+			font-size: 4em;
+			color: white;
+		}
+		h2{
+			font-family: "Arial", sans-serif;
+			color: white;
+		}
+		#score{
+			font-family: "Arial", sans-serif;
+			font-weight: 1000;
+			font-size: 2em;
+			color: white;
+			position: fixed;
+			top: 2.5%;
+			left: 2.5%;
+			pointer-events: none;
+		}
     </style>
 </head>
 <body onunload="unload()">
 <span  class="container">
+<h1>Asteroides</h1>
+<h2 onclick="start()">Pulse aqui para jugar</h2>
+</span>
 <!-- Div which will hold the Output -->
 <div id="WebGL-output">
+<span  id="score">000000</span>
 </div>
-</span>
 </body>
 </html>

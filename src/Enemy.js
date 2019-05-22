@@ -39,5 +39,9 @@ class Enemy extends Movable {
 		}
 		return (this.health <= 0);
 	}
-
+	
+	dispose() {
+		score += 1000;
+		super.dispose();
+	}
 }

@@ -1,15 +1,18 @@
 var gameTime = null;
 var gameTime_prev = null;
+var startTime = null;
 var frameRate = 1/60.0; //Velocidad de three.js
 var scene_size_x = 45;
 var scene_size_z = 20;
+var started = false;
+var score = 0;
 
 var mouse = null;
 var mouse3D = null;
 
 var color_gold = 0xffd700
 var color_goldenrod = 0xdaa520;
-var color_brown = 0x654321;
+var color_brown = 0x433221;
 var color_darkpurple = 0x800080;
 var color_pink = 0xff00ff;
 var color_brightgreen = 0x50ff50;
@@ -63,7 +66,7 @@ class Game extends THREE.Scene {
 		ground.geometry = new THREE.BoxGeometry (100,0.2,50);
 		ground.geometry.applyMatrix (new THREE.Matrix4().makeTranslation(0,-0.1,0));
 		var texture = new THREE.TextureLoader().load('media/wood.jpg');
-		ground.material = new THREE.MeshPhongMaterial ({map: texture, opacity: 0.4, transparent: true});
+		ground.material = new THREE.MeshPhongMaterial ({map: texture, opacity: 0.1, transparent: true});
 		this.ground = ground;
 		this.add (ground);
 	}
@@ -92,26 +95,27 @@ class Game extends THREE.Scene {
 	}
 
 	onKeyPress(event) {
-		this.model.onKeyPress(event);
+		if(this.model) this.model.onKeyPress(event);
 	}
 
 	onKeyDown(event) {
-		this.model.onKeyDown(event);
+		if(this.model) this.model.onKeyDown(event);
 	}
 
 	onKeyUp(event) {
-		this.model.onKeyUp(event);
+		if(this.model) this.model.onKeyUp(event);
 	}
 
 	onMouseDown(event) {
-		this.model.onMouseDown(event);
+		if(this.model) this.model.onMouseDown(event);
 	}
 	onMouseUp(event) {
-		this.model.onMouseUp(event);
+		if(this.model) this.model.onMouseUp(event);
 	}
 
 	update () {
-		if(!this.model) {
+		if(!this.model && started) {
+			console.log("FIRE");
 			this.gameHandler.spawnPlayer();
 			//this.gameHandler.spawnAsteroids();
 			//this.gameHandler.spawnAsteroids();
@@ -160,12 +164,17 @@ class Game extends THREE.Scene {
 			this.updatables.splice(objs_2_del[i],1);
 		}
 
+		//Puntuación
+		var str_score = score.toString();
+		while(str_score.length < 9) "0" + str_score;
+		document.getElementById("score").innerHTML = str_score;
+
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
 		if(gameTime > 10000+this.debugLogGameTime) {
 			this.debugLogGameTime = gameTime;
 			console.log(this.updatables);
-			console.log(this.model.position)
+			if(this.model) console.log(this.model.position)
 			console.log(scene_size_x + ", " + scene_size_z);
 		}
 	}
