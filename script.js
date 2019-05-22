@@ -58,18 +58,19 @@ function onWindowResize () {
   scene.setCameraAspect (HORIZ / VERT);
   if(window.innerWidth > window.innerHeight*HORIZ/VERT) {
       renderer.setSize (window.innerHeight*HORIZ/VERT, window.innerHeight);
-      console.log(window.innerWidth, window.innerHeight);
   }
   else {
       renderer.setSize (window.innerWidth, window.innerWidth*VERT/HORIZ);
   }
+  renderer_width = renderer.getSize().width;
+  renderer_height = renderer.getSize().height;
 }
 
 function start() {
 	started = true;
 	startTime = gameTime;
 	document.getElementsByClassName("container")[0].style.display = "none";
-	
+
 }
 
 function onMouseMove(event) {
@@ -98,6 +99,7 @@ function onMouseUp(event) {
 
 function unload() {
     scene.unload();
+    rsc.unload();
 }
 
 /// La función principal

@@ -8,6 +8,9 @@ var started = false;
 var score = 0;
 var last_score = -1;
 
+var renderer_width = null;
+var renderer_height = null;
+
 var mouse = null;
 var mouse3D = null;
 
@@ -92,8 +95,8 @@ class Game extends THREE.Scene {
 	}
 
 	onMouseMove(event) {
-		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-		mouse.y = 1 - 2 * (event.clientY / window.innerHeight);
+		mouse.x = (event.clientX / renderer_width ) * 2 - 1;
+		mouse.y = 1 - 2 * (event.clientY / renderer_height );
 	}
 
 	onKeyPress(event) {
@@ -110,6 +113,8 @@ class Game extends THREE.Scene {
 
 	onMouseDown(event) {
 		if(this.model) this.model.onMouseDown(event);
+		console.log("RENDERER: " + renderer_width + " " + renderer_height);
+		console.log("SCREEN: " + window.innerWidth + " " + window.innerHeight);
 	}
 	onMouseUp(event) {
 		if(this.model) this.model.onMouseUp(event);
@@ -170,7 +175,6 @@ class Game extends THREE.Scene {
 		if(this.model && this.model.last_health != this.model.health) {
 			var lifebar = document.getElementById("hp");
 			lifebar.style.width = this.model.health + "px";
-			lifebar.style.background_color = (this.model.health*0xff)<<8 & ((1-this.model.health)*0xff)<<16; //Interpola color entre cerde y rojo
 			this.model.last_health = this.model.health;
 		}
 		else if(!this.model && started) document.getElementById("hp").style.display = "none";
