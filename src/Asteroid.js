@@ -49,7 +49,7 @@ class Asteroid extends Movable {
 
 	dispose(force) {
 		rsc.returnAsteroid(this);
-		score += Math.floor(this.radius)*10;
+		if(started) score += Math.floor(this.radius)*10;
 		if(!force && this.health <= 0 && this.radius >= 3 && Math.random() < this.radius*0.2 ) {
 			let loops = Math.random();
 			loops = (loops < 0.10) ? 3 : ((loops < 0.70) ? 2 : 1); //Si se subdivide, 30% => 1 60% => 2 10% => 3

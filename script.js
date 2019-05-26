@@ -67,10 +67,21 @@ function onWindowResize () {
 }
 
 function start() {
-	started = true;
 	startTime = gameTime;
 	document.getElementsByClassName("container")[0].style.display = "none";
+    document.getElementById("hp").style.display = "block";
+    scene.unload();
+    started = true;
+}
 
+function end(){
+    started = false;
+    scene.model = null;
+    document.getElementsByClassName("container")[0].style.display = "block";
+    document.getElementsByTagName("H1")[0].innerHTML = "Game Over";
+    document.getElementsByTagName("H2")[0].innerHTML = "Pulse aqui para reiniciar";
+    document.getElementById("hp").style.display = "none";
+    console.log("end");
 }
 
 function onMouseMove(event) {

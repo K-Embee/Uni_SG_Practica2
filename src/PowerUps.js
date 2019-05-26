@@ -10,9 +10,9 @@ class PowerUp extends Movable {
 		this.posX = posX;
 		this.posZ = posZ;
         this.position.set(this.posX, 0, this.posZ);
-		this.radius = 0.5;
+		this.radius = 1.5;
 		this.variance = THREE.Math.degToRad(90); //Varianza en el angulo con el que aparece
-		rsc.getProjectile(this, radius, color_lightblue);
+		rsc.getProjectile(this, this.radius, color_lightblue);
 
         this.speed = new THREE.Vector2(posX,posZ).normalize().multiplyScalar(this.MAXSPEED).negate();
 		this.speed.rotateAround(new THREE.Vector2(0,0),Math.random()*this.variance-this.variance/2);

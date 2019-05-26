@@ -42,7 +42,7 @@ class Enemy extends Movable {
 	}
 
 	dispose() {
-		score += 1000;
+		if(started) score += 250;
 		super.dispose();
 	}
 }

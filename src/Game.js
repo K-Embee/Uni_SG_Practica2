@@ -95,8 +95,10 @@ class Game extends THREE.Scene {
 	}
 
 	onMouseMove(event) {
-		mouse.x = (event.clientX / renderer_width ) * 2 - 1;
-		mouse.y = 1 - 2 * (event.clientY / renderer_height );
+		var ratioX = window.innerWidth/renderer_width;
+		var ratioY = window.innerHeight/renderer_height;
+		mouse.x = ((event.clientX / window.innerWidth ) * 2 - 1) * ratioX;
+		mouse.y = (1 - 2 * (event.clientY / window.innerHeight )) * ratioY;
 	}
 
 	onKeyPress(event) {
@@ -177,8 +179,9 @@ class Game extends THREE.Scene {
 			lifebar.style.width = this.model.health + "px";
 			this.model.last_health = this.model.health;
 		}
-		else if(!this.model && started) document.getElementById("hp").style.display = "none";
-
+		else if(this.model && this.model.health <= 0 && started){
+			end();
+		}
 		if(score != last_score) {
 			console.log(score);
 			last_score = score;
@@ -203,5 +206,6 @@ class Game extends THREE.Scene {
 			this.remove(this.updatables[i]);
 			this.updatables.splice(i,1);
 		}
+		if(this.model) this.model.dispose();
 	}
 }

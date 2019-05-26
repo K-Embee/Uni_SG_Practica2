@@ -46,7 +46,7 @@ class ProjectileGenerator_CHARGE extends ProjectileGenerator {
         this.pellets = 5;
         this.damage = 10;
         this.chargeStart = 0;
-        this.TIME_TO_MAX_CHARGE = 3000;
+        this.TIME_TO_MAX_CHARGE = 1200;
         this.TIME_TO_MIN_CHARGE = 250;
         this.MAX_CHARGE_DAMAGE = 150;
     }
@@ -204,7 +204,7 @@ class Projectile extends Movable {
 		}
 		return false;
 	}
-	
+
 	dispose() {
 		rsc.returnProjectile(this);
 		super.dispose()
