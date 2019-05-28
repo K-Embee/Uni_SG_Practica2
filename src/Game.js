@@ -13,6 +13,7 @@ var renderer_height = null;
 
 var mouse = null;
 var mouse3D = null;
+var gamepad = null;
 
 var color_gold = 0xffd700
 var color_goldenrod = 0xdaa520;
@@ -36,8 +37,8 @@ class Game extends THREE.Scene {
 		this.createGround ();
 		this.updatables = Array();
 
-		this.axis = new THREE.AxesHelper (5);
-		this.add (this.axis);
+		//this.axis = new THREE.AxesHelper (5);
+		//this.add (this.axis);
 
 		/*this.model = new Player();
 		this.add (this.model);
@@ -71,7 +72,7 @@ class Game extends THREE.Scene {
 		ground.geometry = new THREE.BoxGeometry (100,0.2,50);
 		ground.geometry.applyMatrix (new THREE.Matrix4().makeTranslation(0,-0.1,0));
 		var texture = new THREE.TextureLoader().load('media/wood.jpg');
-		ground.material = new THREE.MeshPhongMaterial ({map: texture, opacity: 0.1, transparent: true});
+		ground.material = new THREE.MeshPhongMaterial ({map: texture, opacity: 0, transparent: true});
 		this.ground = ground;
 		this.add (ground);
 	}
@@ -80,9 +81,17 @@ class Game extends THREE.Scene {
 		var ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
 		this.add (ambientLight);
 
-		this.spotLight = new THREE.SpotLight( 0xffffff, 0.5 );
+		this.spotLight = new THREE.SpotLight( 0xffffff, 0.35 );
 		this.spotLight.position.set( 60, 60, 40 );
 		this.add (this.spotLight);
+
+		this.tierra = new THREE.Mesh(new THREE.SphereGeometry(16, 32, 32));
+		var texture = new THREE.TextureLoader().load('../media/mundo.jpg');
+		texture.minFilter = THREE.NearestFilter;
+		this.tierra.material = new THREE.MeshPhongMaterial ({map: texture});
+		this.tierra.position.set(0, -50, 0);
+		this.tierra.rotation.x = -0.7;
+		this.add(this.tierra);
 	}
 
 	getCamera () {
@@ -115,8 +124,6 @@ class Game extends THREE.Scene {
 
 	onMouseDown(event) {
 		if(this.model) this.model.onMouseDown(event);
-		console.log("RENDERER: " + renderer_width + " " + renderer_height);
-		console.log("SCREEN: " + window.innerWidth + " " + window.innerHeight);
 	}
 	onMouseUp(event) {
 		if(this.model) this.model.onMouseUp(event);
@@ -140,6 +147,8 @@ class Game extends THREE.Scene {
 		if(pickedObjects.length > 0) {
 			mouse3D = ( pickedObjects[0].point );
 		}
+
+		this.tierra.rotation.y += 0.2*timeSinceLastFrame();
 
 		for(var i = 0; i < this.updatables.length; i++) {
 			this.updatables[i].update();

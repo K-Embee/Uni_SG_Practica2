@@ -70,7 +70,9 @@ function start() {
 	startTime = gameTime;
 	document.getElementsByClassName("container")[0].style.display = "none";
     document.getElementById("hp").style.display = "block";
+    document.getElementById("hp").style.width = "100px";
     scene.unload();
+    score = 0;
     started = true;
 }
 
@@ -108,6 +110,14 @@ function onMouseUp(event) {
     scene.onMouseUp(event);
 }
 
+function gamePadConnected(event) {
+    //scene.onMouseUp(event);
+}
+
+function gamePadDisconnected(event) {
+    //scene.onMouseUp(event);
+}
+
 function unload() {
     scene.unload();
     rsc.unload();
@@ -125,11 +135,13 @@ $(function () {
   // Cada vez que el usuario cambie el tamaño de la ventana se llama a la función que actualiza la cámara y el renderer
   window.addEventListener ("resize", onWindowResize);
   window.addEventListener ("mousemove", onMouseMove);
-  window.addEventListener ("keypress", onKeyPress)
-  window.addEventListener ("keydown", onKeyDown)
-  window.addEventListener ("keyup", onKeyUp)
-  window.addEventListener ("mousedown", onMouseDown)
-  window.addEventListener ("mouseup", onMouseUp)
+  window.addEventListener ("keypress", onKeyPress);
+  window.addEventListener ("keydown", onKeyDown);
+  window.addEventListener ("keyup", onKeyUp);
+  window.addEventListener ("mousedown", onMouseDown);
+  window.addEventListener ("mouseup", onMouseUp);
+  window.addEventListener("gamepadconnected", gamePadConnected);
+  window.addEventListener("gamepaddisconnected", gamePadDisonnected);
 
 
   // Se crea una interfaz gráfica de usuario vacia
