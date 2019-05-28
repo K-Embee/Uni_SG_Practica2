@@ -14,6 +14,8 @@ var renderer_height = null;
 var mouse = null;
 var mouse3D = null;
 var gamepad = null;
+var gamepadinfo = null;
+var last_buttons = null;
 
 var color_gold = 0xffd700
 var color_goldenrod = 0xdaa520;
@@ -130,6 +132,10 @@ class Game extends THREE.Scene {
 	}
 
 	update () {
+		//Iniciar mediante pulsar start
+		if(gamepadinfo != null) {
+			if(gamepadinfo.buttons[9].value >= 0.2) start();
+		}
 		if(!this.model && started) {
 			console.log("FIRE");
 			this.gameHandler.spawnPlayer();
@@ -141,15 +147,63 @@ class Game extends THREE.Scene {
 		gameTime_prev = gameTime;
 		gameTime = gameTime+1000*frameRate //Date.now(); //ver linea 1
 
-		var raycaster = new  THREE.Raycaster();
-		raycaster.setFromCamera (mouse, scene.camera);
-		var pickedObjects = raycaster.intersectObject(scene.ground, false);
-		if(pickedObjects.length > 0) {
-			mouse3D = ( pickedObjects[0].point );
+		//Actualizar la información del gamepad si se esta usando
+		if(gamepad != null){
+			if (gamepadinfo == null) gamepadinfo = navigator.getGamepads()[gamepad];
+			if (last_buttons == null) last_buttons = Array(); //Clonado
+
+			if(gamepadinfo.buttons[7].value >= 0.2 && last_buttons[7] < 0.2) {
+				console.log("hurk");
+				var event = { "button":0 };
+				this.onMouseDown(event);
+			}
+			else if(gamepadinfo.buttons[7].value < 0.2 && last_buttons[7] >= 0.2) {
+				console.log("kruh");
+				var event = { "button":0 };
+				this.onMouseUp(event);
+			}
+			if(this.model){
+				//Simula la posición del raton basado en la posicion del segundo joystick y del jugador
+				if(Math.abs(gamepadinfo.axes[2]) > 0.2 || Math.abs(gamepadinfo.axes[3]) > 0.2)
+				mouse3D = new THREE.Vector3(this.model.posX+gamepadinfo.axes[2]*scene_size_x/2, 0, this.model.posZ+gamepadinfo.axes[3]*scene_size_z/2);
+			}
+
+			if(gamepadinfo.buttons[0].value >= 0.2 && last_buttons[0] < 0.2){
+				var event = { "key":1 };
+				this.onKeyDown(event);
+			}
+			if(gamepadinfo.buttons[2].value >= 0.2 && last_buttons[2] < 0.2){
+				var event = { "key":2 };
+				this.onKeyDown(event);
+			}
+			if(gamepadinfo.buttons[3].value >= 0.2 && last_buttons[3] < 0.2){
+				var event = { "key":3 };
+				this.onKeyDown(event);
+			}
+			if(gamepadinfo.buttons[1].value >= 0.2 && last_buttons[1] < 0.2){
+				var event = { "key":4 };
+				this.onKeyDown(event);
+			}
+
+			last_buttons[0] = gamepadinfo.buttons[0].value;
+			last_buttons[1] = gamepadinfo.buttons[1].value;
+			last_buttons[2] = gamepadinfo.buttons[2].value;
+			last_buttons[3] = gamepadinfo.buttons[3].value;
+			last_buttons[7] = gamepadinfo.buttons[7].value;
+		}
+		//Obtener posición del raton en 3D
+		else {
+			var raycaster = new  THREE.Raycaster();
+			raycaster.setFromCamera (mouse, scene.camera);
+			var pickedObjects = raycaster.intersectObject(scene.ground, false);
+			if(pickedObjects.length > 0) {
+				mouse3D = ( pickedObjects[0].point );
+			}
 		}
 
-		this.tierra.rotation.y += 0.2*timeSinceLastFrame();
+		this.tierra.rotation.y += 0.002*timeSinceLastFrame();
 
+		//ACTUALIZAR TODO
 		for(var i = 0; i < this.updatables.length; i++) {
 			this.updatables[i].update();
 		}
@@ -202,10 +256,11 @@ class Game extends THREE.Scene {
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
 		if(gameTime > 10000+this.debugLogGameTime) {
+			console.log(gamepad); console.log(gamepadinfo);
 			this.debugLogGameTime = gameTime;
 			console.log(this.updatables);
-			if(this.model) console.log(this.model.position)
-			console.log(scene_size_x + ", " + scene_size_z);
+			//if(this.model) console.log(this.model.position)
+			//console.log(scene_size_x + ", " + scene_size_z);
 		}
 	}
 

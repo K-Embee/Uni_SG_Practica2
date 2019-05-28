@@ -111,11 +111,11 @@ function onMouseUp(event) {
 }
 
 function gamePadConnected(event) {
-    //scene.onMouseUp(event);
+    gamepad = event.gamepad.index;
 }
 
 function gamePadDisconnected(event) {
-    //scene.onMouseUp(event);
+    gamepad = null;
 }
 
 function unload() {
@@ -141,9 +141,15 @@ $(function () {
   window.addEventListener ("mousedown", onMouseDown);
   window.addEventListener ("mouseup", onMouseUp);
   window.addEventListener("gamepadconnected", gamePadConnected);
-  window.addEventListener("gamepaddisconnected", gamePadDisonnected);
+  window.addEventListener("gamepaddisconnected", gamePadDisconnected);
 
-
+  if(navigator.getGamepads) {
+      let gp = navigator.getGamepads()[0];
+      console.log(gp);
+      if(gp != null) gamepad = gp.id;
+      else gamepad = null
+  }
+  else gamepad = null;
   // Se crea una interfaz gráfica de usuario vacia
   //gui = new dat.GUI();
 

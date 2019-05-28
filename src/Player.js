@@ -88,13 +88,22 @@ class Player extends Movable {
 
 	updateMove(){
 
-		this.accel = new THREE.Vector2(	(this.thrust[Player.KEYPRESS_LEFT])?-this.MAXACCEL:0 + (this.thrust[Player.KEYPRESS_RIGHT])?this.MAXACCEL:0,
+		var thrusting = false;
+
+		if(gamepad == null) {
+			this.accel = new THREE.Vector2(	(this.thrust[Player.KEYPRESS_LEFT])?-this.MAXACCEL:0 + (this.thrust[Player.KEYPRESS_RIGHT])?this.MAXACCEL:0,
 				(this.thrust[Player.KEYPRESS_UP])?-this.MAXACCEL:0 + (this.thrust[Player.KEYPRESS_DOWN])?this.MAXACCEL:0 );
 
-		var thrusting = false;
-		for(let i = 0; i < this.thrust.length; i++) {
-			if(this.thrust[i] == true) { thrusting = true; break; }
+			for(let i = 0; i < this.thrust.length; i++) {
+				if(this.thrust[i] == true) { thrusting = true; break; }
+			}
 		}
+		else {
+			this.accel = new THREE.Vector2( (gamepadinfo.axes[0] - this.speed.x/this.MAXSPEED)*this.MAXACCEL,
+				(gamepadinfo.axes[1] - this.speed.y/this.MAXSPEED)*this.MAXACCEL );
+			thrusting = (Math.abs(gamepadinfo.axes[0]) > 0.2 || Math.abs(gamepadinfo.axes[1]) > 0.2);
+		}
+
 		if(!thrusting && (Math.abs(this.speed.x) > 1 || Math.abs(this.speed.y) > 1)){
 			this.accel.copy(this.speed.clone().normalize().multiplyScalar(this.FRICTION*timeSinceLastFrame()).negate());
 		}
