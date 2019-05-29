@@ -133,8 +133,8 @@ class Game extends THREE.Scene {
 
 	update () {
 		//Iniciar mediante pulsar start
-		if(gamepadinfo != null) {
-			if(gamepadinfo.buttons[9].value >= 0.2) start();
+		if(gamepad != null && gamepadinfo != null) {
+			if(gamepadinfo.buttons[9].value >= 0.2 && !started) { start(); return; }
 		}
 		if(!this.model && started) {
 			console.log("FIRE");
@@ -201,7 +201,7 @@ class Game extends THREE.Scene {
 			}
 		}
 
-		this.tierra.rotation.y += 0.002*timeSinceLastFrame();
+		this.tierra.rotation.y += 0.01*timeSinceLastFrame();
 
 		//ACTUALIZAR TODO
 		for(var i = 0; i < this.updatables.length; i++) {
@@ -256,7 +256,6 @@ class Game extends THREE.Scene {
 		//Debugging
 		if(!this.debugLogGameTime) this.debugLogGameTime = 0;
 		if(gameTime > 10000+this.debugLogGameTime) {
-			console.log(gamepad); console.log(gamepadinfo);
 			this.debugLogGameTime = gameTime;
 			console.log(this.updatables);
 			//if(this.model) console.log(this.model.position)

@@ -77,6 +77,7 @@ class ProjectileGenerator_CHARGE extends ProjectileGenerator {
         var chargeRatio = (gameTime - this.chargeStart - this.TIME_TO_MIN_CHARGE)/(this.TIME_TO_MAX_CHARGE-this.TIME_TO_MIN_CHARGE);
         chargeRatio = THREE.Math.clamp(chargeRatio,0,1);
         projectile.scale.multiply(new THREE.Vector3(chargeRatio*2+1,chargeRatio*2+1,chargeRatio*2+1));
+        projectile.radius = chargeRatio+0.5;
         projectile.damage = this.damage+chargeRatio*(this.MAX_CHARGE_DAMAGE-this.damage);
     }
 }
@@ -155,6 +156,7 @@ class ProjectileGeneratorEnemy_BASIC extends ProjectileGenerator {
     constructor(parent){
 		super(parent);
 		this.damage = 30;
+        this.cooldown = 1250;
     }
 }
 

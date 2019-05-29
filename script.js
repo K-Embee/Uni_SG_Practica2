@@ -23,7 +23,7 @@ rsc = null;
 function createRenderer () {
   var renderer = new THREE.WebGLRenderer();
   // Se establece un color de fondo en las imágenes que genera el render
-  renderer.setClearColor(new THREE.Color(0x111111), 1.0);
+  renderer.setClearColor(new THREE.Color(0x080808), 1.0);
 
   // Se establece el tamaño, se aprovoche la totalidad de la ventana del navegador
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -112,10 +112,12 @@ function onMouseUp(event) {
 
 function gamePadConnected(event) {
     gamepad = event.gamepad.index;
+    gamepadinfo = navigator.getGamepads()[gamepad];
 }
 
 function gamePadDisconnected(event) {
     gamepad = null;
+    gamepadinfo = null;
 }
 
 function unload() {

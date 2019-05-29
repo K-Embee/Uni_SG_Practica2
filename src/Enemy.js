@@ -5,14 +5,14 @@ class Enemy extends Movable {
 		this.geometry = new THREE.BoxGeometry (2,1,2);
 		this.material = new THREE.MeshPhongMaterial({color: 0x00ff00});
 
-		this.MAXSPEED = 15; //Velocidades en distancia/segundo
+		this.MAXSPEED = 7.5; //Velocidades en distancia/segundo
 		this.MAXACCEL = 5;
 		this.posX = posX;
 		this.posZ = posZ;
         this.position.set(this.posX, 0, this.posZ);
 		this.radius = 1;
 		this.health = 35;
-		this.weapon = new ProjectileGeneratorEnemy(this);
+		this.weapon = new ProjectileGeneratorEnemy_BASIC(this);
 
 		this.speed = new THREE.Vector2(posX,posZ).normalize().multiplyScalar(this.MAXSPEED).negate();
 	}

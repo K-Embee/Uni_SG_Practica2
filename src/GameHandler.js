@@ -2,9 +2,11 @@ class GameHandler {
 	constructor() {
 		this.asteroid_spawn_freq = [6500, 6000, 5500, 4500, 3000];
 		this.multi_asteroid_spawn_prob = [0.1, 0.1, 0.1, 0.1, 0.1];
-		this.enemy_spawn_prob_per_sec = [0, 0.01, 0.025, 0.035, 0.065];
+		this.enemy_spawn_prob_per_sec = [0, 0.02, 0.035, 0.035, 0.035];
+		this.enemy_spawn_min_interval = [0, 60000, 40000, 20000, 0]
 		this.life_spawn_prob_per_sec = [0.01, 0.01, 0.01, 0.01, 0];
 		this.last_second = gameTime;
+		this.last_enemy_spawn = gameTime;
 		this.last_asteroid_spawn = gameTime;
 	}
 
@@ -57,7 +59,10 @@ class GameHandler {
 	update() {
 		var diff = this.checkDifficulty();
 		if(started && this.last_second+1000 <= gameTime) {
-			if(Math.random() < this.enemy_spawn_prob_per_sec[diff]) this.spawnHostiles();
+			if(Math.random() < this.enemy_spawn_prob_per_sec[diff] && this.last_enemy_spawn + this.enemy_spawn_min_interval[diff] <= gameTime) {
+				this.spawnHostiles();
+				this.last_enemy_spawn = gameTime + (Math.random()-0.5)*20000;
+			}
 			if(Math.random() < this.life_spawn_prob_per_sec[diff]) this.spawnLife();
 			this.last_second = gameTime;
 		}
