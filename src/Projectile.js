@@ -152,7 +152,7 @@ class ProjectileGeneratorEnemy extends ProjectileGenerator {
     }
 }
 
-class ProjectileGeneratorEnemy_BASIC extends ProjectileGenerator {
+class ProjectileGeneratorEnemy_BASIC extends ProjectileGeneratorEnemy {
     constructor(parent){
 		super(parent);
 		this.damage = 30;
