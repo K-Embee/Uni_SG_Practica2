@@ -2,7 +2,7 @@
 
 ## English
 
-###University Project:
+### University Project:
 * Year: 2018-2019
 * Subject: Graphical Systems
 * Language: JavaScript
