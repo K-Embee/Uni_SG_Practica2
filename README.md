@@ -30,7 +30,7 @@ Destroy asteroids and enemies to obtan points. You have four weapons, a chargeab
 * Objetivo: Crear un programa con Three.JS utilizando lo que se ha aprendido a lo largo del curso. Aplicar principios de programación orientada a objetos.
 * Colaboradores: Ninguno
 
-Un videojuego 3D jugable en el navegador basado en el juego de Asteroides de Atari, hecho para una práctica d e la asignatura de Sistemas Gráficos. En la segunda mitad del cuatrimestre, tuvimos seis semanas para crear un proyecto con la unica condición siendo que teníamos que aplicar lo que habíamos aprendido de Three.JS y de los gráficos 3D en general, en solitario o en paréja. Aprobé la práctica y asignatura con matrícula de honor.
+Un videojuego 3D jugable en el navegador basado en el juego de Asteroides de Atari, hecho para una práctica de la asignatura de Sistemas Gráficos. En la segunda mitad del cuatrimestre, tuvimos seis semanas para crear un proyecto con la unica condición siendo que teníamos que aplicar lo que habíamos aprendido de Three.JS y de los gráficos 3D en general, en solitario o en paréja. Aprobé la práctica y asignatura con matrícula de honor.
 
 ### Controles (Teclado/Mando):
 * **Teclas WSAD/Stick Izquierdo**: Mover
